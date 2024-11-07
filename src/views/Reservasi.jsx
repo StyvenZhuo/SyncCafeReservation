@@ -2,8 +2,11 @@ import React from 'react'
 
 function Reservasi() {
   return (
-    <div>tesss</div>
-    <p>assalamualaikum</p>
+    <div>
+        <div>tess</div>
+        <p>assalamualaikum</p>
+    </div>
+    
   )
 }
 
