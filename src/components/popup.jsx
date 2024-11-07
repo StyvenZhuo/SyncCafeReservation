@@ -2,7 +2,13 @@ import React from 'react'
 
 function popup() {
   return (
-    <div>popup</div>
+    <div>
+      
+    <body class='bg-gradient-to-b'>
+      a
+    </body>
+      
+    </div>
   )
 }
 
