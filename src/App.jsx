@@ -1,21 +1,19 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
-<<<<<<< Updated upstream
-import Home from './components/Home'
-import popup from './components/popup'
-=======
+import Popup from './views/popup'
 import Home from './views/Home'
->>>>>>> Stashed changes
+import Reservasi from './views/Reservasi'
+import { Routes, Route } from 'react-router-dom';
+
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <>
-      <Home />
-      <popup />
+      <Routes>
+        <Route path="*" element={<Home />} />
+        <Route path="/reservasi" element={<Reservasi />} />
+        <Route path="/popup" element={<Popup />} />
+      </Routes>
 
     </>
   )
