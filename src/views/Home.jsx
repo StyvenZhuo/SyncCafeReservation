@@ -4,7 +4,10 @@ function Home() {
   return (
     <div class='font-xl'>
 
-    <div></div>
+    <div class='flex flex-row-0 flex-wrap'>
+      <div>kiri</div>
+      <div>kanan</div>
+    </div>
     
     
     
