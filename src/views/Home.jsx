@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import homeBg from '../assets/Home-bg.png';
 import pfp from '../assets/PFP.png';
+import history from '../assets/button-history.png';
 
 function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -32,18 +33,26 @@ function Home() {
         
         {/* Left Side (User Info and Welcome Section) */}
         <div className="flex-initial bg-opacity-90 p-6 rounded-lg shadow-ld ">
-          <div className="bg-white flex flex-initial items-center p-4 rounded-lg shadow-md mb-64">
-            <div className="flex flex-row">
-              <img src={pfp} alt="pfp" className='w-15 h-15 mr-3' />
-              <div className="text-left mr-10">
+          <div className="bg-white flex flex-col lg:flex-row lg:max-w-[60%] items-center p-4 rounded-lg shadow-md mb-16 lg:mb-64 mx-auto">
+            <div className="flex items-center mb-4 lg:mb-0 lg:mr-auto">
+              <img src={pfp} alt="pfp" className="w-12 h-12 lg:w-15 lg:h-15 mr-3" />
+              <div className="text-left">
                 <p className="text-sm text-gray-500 font-semibold text-[#343434]">Welcome,</p>
-                <h1 className="text-3xl font-light">{isLoggedIn ? userName : "Guest"}</h1>
+                <h1 className="text-2xl lg:text-3xl font-light">
+                  {isLoggedIn ? userName : "Guest"}
+                </h1>
               </div>
             </div>
-            <button onClick={isLoggedIn ? handleLogout : toggleLoginPopup} className="text-xs px-3 py-1 bg-[#1E1E1E] text-white rounded-full hover:bg-[#343434] transition duration-200">
+            <button
+              onClick={isLoggedIn ? handleLogout : toggleLoginPopup}
+              className="text-xs px-3 py-1 bg-[#1E1E1E] text-white rounded-full hover:bg-[#343434] transition duration-200 lg:ml-auto"
+            >
               {isLoggedIn ? "Log Out" : "Log In"}
             </button>
           </div>
+
+          {/* {Reservation History} */}
+          <img src={history} alt="History" className='w-12 h-12 lg:w-15 lg:h-15 mr-3' />
           
           {/* Reserve Section */}
           <div className="flex flex-col items-start mt-8 text-left">
