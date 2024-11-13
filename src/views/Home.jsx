@@ -33,32 +33,37 @@ function Home() {
         
         {/* Left Side (User Info and Welcome Section) */}
         <div className="flex-initial bg-opacity-90 p-6 rounded-lg shadow-ld ">
-          <div className="bg-white flex flex-col lg:flex-row lg:max-w-[60%] items-center p-4 rounded-lg shadow-md mb-16 lg:mb-64 mx-auto">
-            <div className="flex items-center mb-4 lg:mb-0 lg:mr-auto">
-              <img src={pfp} alt="pfp" className="w-12 h-12 lg:w-15 lg:h-15 mr-3" />
-              <div className="text-left">
-                <p className="text-sm text-gray-500 font-semibold text-[#343434]">Welcome,</p>
-                <h1 className="text-2xl lg:text-3xl font-light">
-                  {isLoggedIn ? userName : "Guest"}
-                </h1>
+          <div className="flex flex-row">
+            <div className="bg-white flex flex-col lg:flex-row lg:max-w-[60%] items-center p-4 rounded-lg shadow-md mr-5 lg:mb-64">
+              <div className="flex items-center mb-4 lg:mb-0 lg:mr-5">
+                <img src={pfp} alt="pfp" className="w-12 h-12 lg:w-15 lg:h-15 mr-3" />
+                <div className="text-left">
+                  <p className="text-sm text-gray-500 font-semibold text-[#343434]">Welcome,</p>
+                  <h1 className="text-2xl lg:text-3xl font-light">
+                    {isLoggedIn ? userName : "Guest"}
+                  </h1>
+                </div>
               </div>
+              <button
+                onClick={isLoggedIn ? handleLogout : toggleLoginPopup}
+                className="text-xs px-3 py-1 bg-[#1E1E1E] text-white rounded-full hover:bg-[#343434] transition duration-200 lg:ml-10"
+              >
+                {isLoggedIn ? "Log Out" : "Log In"}
+              </button>
             </div>
-            <button
-              onClick={isLoggedIn ? handleLogout : toggleLoginPopup}
-              className="text-xs px-3 py-1 bg-[#1E1E1E] text-white rounded-full hover:bg-[#343434] transition duration-200 lg:ml-auto"
-            >
-              {isLoggedIn ? "Log Out" : "Log In"}
-            </button>
+            <a style={{ filter: 'brightness(10)' }} href="./popup"><img src={history} alt="History" className='w-12 h-12 lg:w-24 lg:h-24 mr-3 hover:bg-black transition duration-200' />
+            </a>
           </div>
 
-          {/* {Reservation History} */}
-          <img src={history} alt="History" className='w-12 h-12 lg:w-15 lg:h-15 mr-3' />
           
           {/* Reserve Section */}
           <div className="flex flex-col items-start mt-8 text-left">
             <div className="flex flex-row text-7xl text-white mb-4" style={{ textShadow: '2px 2px 4px rgba(0, 0, 0, 0.6)' }}>
-              <p className="font-light mr-6 text-4xl sm:text-5xl md:text-6xl lg:text-7xl">Ready to</p>
-              <p className="italic font-medium text-4xl sm:text-5xl md:text-6xl lg:text-7xl">book?</p>
+              <p className="mr-6 text-4xl sm:text-5xl md:text-6xl lg:text-7xl">
+                <span className="font-light">Ready to </span>
+                <span className="italic font-medium">book?</span>
+              </p>
+
             </div>
             <button
               onClick={() => {
@@ -76,8 +81,8 @@ function Home() {
         </div>
 
         {/* Right Side (Recent Reservations) */}
-        <div className="flex-initial bg-white bg-opacity-90 p-6 rounded-lg shadow-lg overflow-auto h-80 md:h-auto md:w-1/2 mt-8 md:mt-0">
-          <h3 className="text-xl font-semibold mb-4">Recent Reservations</h3>
+        <div className="flex-initial p-6 rounded-lg shadow-lg overflow-auto h-80 md:h-auto md:w-1/2 mt-8 md:mt-0">
+          <h3 className="font-white text-xl font-semibold mb-4">Recent Reservations</h3>
           {isLoggedIn ? (
             <div className="space-y-4">
               {/* Placeholder reservation cards */}
