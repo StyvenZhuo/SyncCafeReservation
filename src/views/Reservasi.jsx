@@ -161,7 +161,7 @@ function Reservasi() {
 
         {/* Pilihan Cafe (Scrollable Horizontal) */}
         <div className="flex flex-col justify-center">
-          <h2 className="text-4xl font-bold text-gray-800 mb-6 text-center lg:text-left">Pick a Cafe</h2>
+          <h2 className="text-4xl font-bold text-gray-800 mb-6 text-center lg:text-center">Pick a Cafe</h2>
           <div className="overflow-x-auto flex space-x-4 py-4">
             {cafes.map((cafe) => (
               <div
