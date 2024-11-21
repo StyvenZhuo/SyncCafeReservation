@@ -7,7 +7,7 @@ import CafeList from './CafeList';
 
 function Admin() {
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen bg-slate-50">
       {/* Sidebar */}
       <Sidebar />
 
