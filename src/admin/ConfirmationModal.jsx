@@ -3,7 +3,7 @@ import React from 'react';
 function ConfirmationModal({ onConfirm, onCancel }) {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-      <div className="bg-white p-4 rounded shadow-md space-y-4">
+      <div className="bg-white p-4 rounded-lg shadow-md space-y-4">
         <p>Confirm to edit?</p>
         <div className="flex justify-end space-x-2">
           <button

@@ -8,37 +8,33 @@ function ReservationTable() {
     { id: 2, cafe: 'Camba', name: 'Si Babi Sok Keren', date: '2024-11-26', time: '19:00', pax: '4', seating: 'Outdoor', notes: 'babii' },
     { id: 3, cafe: 'Archalley', name: 'Derik Si Playboy', date: '2024-11-26', time: '19:00', pax: '6', seating: 'Outdoor', notes: 'derik playboyyyy' },
   ]);
-  
+
   const [editing, setEditing] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [currentEdit, setCurrentEdit] = useState({});
   const [expandedNotes, setExpandedNotes] = useState({}); // state to track expanded notes
 
-  const handleEdit = (id, field, value) => {
-    setReservations((prev) =>
-      prev.map((res) =>
-        res.id === id ? { ...res, [field]: value } : res
-      )
-    );
-  };
-
-  const handleConfirmEdit = () => {
-    setModalOpen(false);
-    setEditing(null);
-    setCurrentEdit({});
-  };
-
   const handleInputChange = (e, res, field) => {
     const value = e.target.value;
-    setCurrentEdit({ ...currentEdit, [res.id]: { ...currentEdit[res.id], [field]: value } });
-    handleEdit(res.id, field, value);
+    setCurrentEdit({
+      ...currentEdit,
+      [res.id]: { ...currentEdit[res.id], [field]: value },
+    });
   };
 
-  const handleInputBlur = (e, res, field) => {
-    if (!e.target.value) {
-      setModalOpen(true);
-      setCurrentEdit({ ...currentEdit, [res.id]: { ...currentEdit[res.id], [field]: e.target.value } });
-    }
+  const handleSave = () => {
+    setModalOpen(true);
+  };
+
+  const handleConfirmSave = () => {
+    setReservations((prev) =>
+      prev.map((res) =>
+        res.id === editing ? { ...res, ...currentEdit[editing] } : res
+      )
+    );
+    setEditing(null);
+    setModalOpen(false);
+    setCurrentEdit({});
   };
 
   const toggleNotes = (id) => {
@@ -73,7 +69,10 @@ function ReservationTable() {
           </thead>
           <tbody>
             {reservations.map((res, index) => (
-              <tr key={res.id} className={index % 2 === 0 ? 'bg-indigo-200' : 'bg-white'}>
+              <tr
+                key={res.id}
+                className={index % 2 === 0 ? 'bg-indigo-200' : 'bg-white'}
+              >
                 <td className="p-4">{res.id}</td>
                 <td className="p-4">
                   {editing === res.id ? (
@@ -82,7 +81,6 @@ function ReservationTable() {
                       className="p-1"
                       defaultValue={res.cafe}
                       onChange={(e) => handleInputChange(e, res, 'cafe')}
-                      onBlur={(e) => handleInputBlur(e, res, 'cafe')}
                     />
                   ) : (
                     res.cafe
@@ -95,7 +93,6 @@ function ReservationTable() {
                       className="p-1"
                       defaultValue={res.name}
                       onChange={(e) => handleInputChange(e, res, 'name')}
-                      onBlur={(e) => handleInputBlur(e, res, 'name')}
                     />
                   ) : (
                     res.name
@@ -109,14 +106,12 @@ function ReservationTable() {
                         className="p-1"
                         defaultValue={res.date}
                         onChange={(e) => handleInputChange(e, res, 'date')}
-                        onBlur={(e) => handleInputBlur(e, res, 'date')}
                       />
                       <input
                         type="time"
                         className="p-1"
                         defaultValue={res.time}
                         onChange={(e) => handleInputChange(e, res, 'time')}
-                        onBlur={(e) => handleInputBlur(e, res, 'time')}
                       />
                     </>
                   ) : (
@@ -130,7 +125,6 @@ function ReservationTable() {
                       className="p-1"
                       defaultValue={res.pax}
                       onChange={(e) => handleInputChange(e, res, 'pax')}
-                      onBlur={(e) => handleInputBlur(e, res, 'pax')}
                     />
                   ) : (
                     res.pax
@@ -143,7 +137,6 @@ function ReservationTable() {
                       className="p-1"
                       defaultValue={res.seating}
                       onChange={(e) => handleInputChange(e, res, 'seating')}
-                      onBlur={(e) => handleInputBlur(e, res, 'seating')}
                     />
                   ) : (
                     res.seating
@@ -156,7 +149,6 @@ function ReservationTable() {
                       className="p-1"
                       defaultValue={res.notes}
                       onChange={(e) => handleInputChange(e, res, 'notes')}
-                      onBlur={(e) => handleInputBlur(e, res, 'notes')}
                     />
                   ) : (
                     <div className="max-w-[200px] h-auto overflow-hidden justify-center">
@@ -177,18 +169,29 @@ function ReservationTable() {
                   )}
                 </td>
                 <td className="p-4 flex space-x-2">
-                  <button
-                    className="bg-blue-500 text-white px-2 py-1 rounded"
-                    onClick={() => setEditing(editing === res.id ? null : res.id)}
-                  >
-                    <FaEdit />
-                  </button>
-                  <button
-                    className="bg-red-500 text-white px-2 py-1 rounded"
-                    onClick={() => handleDelete(res.id)}
-                  >
-                    <FaTrashAlt />
-                  </button>
+                  {editing === res.id ? (
+                    <button
+                      className="bg-green-500 text-white px-2 py-1 rounded"
+                      onClick={handleSave}
+                    >
+                      Save
+                    </button>
+                  ) : (
+                    <>
+                      <button
+                        className="mr-2 text-blue-500"
+                        onClick={() => setEditing(res.id)}
+                      >
+                        <FaEdit />
+                      </button>
+                      <button
+                        className="text-red-500"
+                        onClick={() => handleDelete(res.id)}
+                      >
+                        <FaTrashAlt />
+                      </button>
+                    </>
+                  )}
                 </td>
               </tr>
             ))}
@@ -198,7 +201,7 @@ function ReservationTable() {
 
       {modalOpen && (
         <ConfirmationModal
-          onConfirm={handleConfirmEdit}
+          onConfirm={handleConfirmSave}
           onCancel={() => setModalOpen(false)}
         />
       )}
