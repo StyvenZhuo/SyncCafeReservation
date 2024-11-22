@@ -5,15 +5,35 @@ import ConfirmationModal from './ConfirmationModal';
 function ReservationTable() {
   const [reservations, setReservations] = useState([
     { id: 1, cafe: 'Forest', name: 'Cristine Pintar', date: '2024-11-25', time: '18:00', pax: '2', seating: 'Indoor', notes: 'ini harusny text panjanggggggg biar bisa ngok see more see less' },
-    { id: 2, cafe: 'Camba', name: 'Si Babi Sok Keren', date: '2024-11-26', time: '19:00', pax: '4', seating: 'Outdoor', notes: 'babii' },
-    { id: 3, cafe: 'Archalley', name: 'Derik Si Playboy', date: '2024-11-26', time: '19:00', pax: '6', seating: 'Outdoor', notes: 'derik playboyyyy' },
+    { id: 2, cafe: 'Camba', name: 'Fifa emezing', date: '2024-11-26', time: '19:00', pax: '4', seating: 'Outdoor', notes: 'babii' },
+    { id: 3, cafe: 'Forest', name: 'Derik Si Playboy', date: '2024-11-26', time: '19:00', pax: '6', seating: 'Outdoor', notes: 'derik playboyyyy' },
+    { id: 4, cafe: 'Forest', name: 'Tipen keren', date: '2024-11-22', time: '12:00', pax: '3', seating: 'Indoor', notes: 'ini harusny text panjanggggggg biar bisa ngok see more see less' },
+    { id: 5, cafe: 'Archalley', name: 'Elen gacor', date: '2024-11-14', time: '20:00', pax: '4', seating: 'Outdoor', notes: 'babii' },
+    { id: 6, cafe: 'Archalley', name: 'jen uwaw', date: '2024-11-30', time: '19:00', pax: '6', seating: 'Outdoor', notes: 'derik playboyyyy' },
   ]);
 
   const [editing, setEditing] = useState(null);
+  const [originalReservations, setOriginalReservations] = useState([...reservations]);
   const [modalOpen, setModalOpen] = useState(false);
   const [currentEdit, setCurrentEdit] = useState({});
-  const [expandedNotes, setExpandedNotes] = useState({}); // state to track expanded notes
+  const [expandedNotes, setExpandedNotes] = useState({}); 
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
+  const totalPages = Math.ceil(reservations.length / itemsPerPage);
+  const paginatedData = reservations.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const goToNextPage = () => {
+    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+  };
+
+  const goToPreviousPage = () => {
+    if (currentPage > 1) setCurrentPage(currentPage - 1);
+  };
+  
   const handleInputChange = (e, res, field) => {
     const value = e.target.value;
     setCurrentEdit({
@@ -34,6 +54,7 @@ function ReservationTable() {
     );
     setEditing(null);
     setModalOpen(false);
+    setOriginalReservations([...reservations]);
     setCurrentEdit({});
   };
 
@@ -48,33 +69,47 @@ function ReservationTable() {
     setReservations((prev) => prev.filter((res) => res.id !== id));
   };
 
+  const goToPage = (page) => setCurrentPage(page);
+
+  const handleEditClick = (id) => {
+    setOriginalReservations([...reservations]); // Save current data before editing
+    setEditing(id);
+  };
+
+  const handleCancelEdit = () => {
+    setReservations([...originalReservations]); // Revert to original data
+    setEditing(null);
+    setModalOpen(false);
+    setCurrentEdit({});
+  };
+
   return (
-    <div className="space-y-4">
-      <h1 className="text-2xl font-bold">Reservations</h1>
+    <div className="space-y-4 relative">
+      <h1 className="sm:text-lg md:text-2xl font-bold sticky top-0  z-10 p-4">Reservations</h1>
 
       {/* Responsive Table */}
       <div className="overflow-x-auto">
-        <table className="min-w-full bg-white table-fixed">
+        <table className="min-w-full bg-white table-fixed text-sm md:text-base">
           <thead>
             <tr>
-              <th className="p-4 w-1/8">Reserve No</th>
-              <th className="p-4 w-1/8">Cafe</th>
-              <th className="p-4 w-1/8">Guest Name</th>
-              <th className="p-4 w-1/8">Time & Date</th>
-              <th className="p-4 w-1/8">Pax</th>
-              <th className="p-4 w-1/8">Seating</th>
-              <th className="p-4 w-1/8">Notes</th>
-              <th className="p-4 w-1/8">Actions</th>
+              <th className="p-2 md:p-4 w-1/8">Reserve No</th>
+              <th className="p-2 md:p-4 w-1/8">Cafe</th>
+              <th className="p-2 md:p-4 w-1/8">Guest Name</th>
+              <th className="p-2 md:p-4 w-1/8">Time & Date</th>
+              <th className="p-2 md:p-4 w-1/8">Pax</th>
+              <th className="p-2 md:p-4 w-1/8">Seating</th>
+              <th className="p-2 md:p-4 w-1/8">Notes</th>
+              <th className="p-2 md:p-4 w-1/8">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {reservations.map((res, index) => (
+            {paginatedData.map((res, index) => (
               <tr
                 key={res.id}
                 className={index % 2 === 0 ? 'bg-indigo-200' : 'bg-white'}
               >
-                <td className="p-4">{res.id}</td>
-                <td className="p-4">
+                <td className="p-2 md:p-4">{res.id}</td>
+                <td className="p-2 md:p-4">
                   {editing === res.id ? (
                     <input
                       type="text"
@@ -86,7 +121,7 @@ function ReservationTable() {
                     res.cafe
                   )}
                 </td>
-                <td className="p-4">
+                <td className="p-2 md:p-4">
                   {editing === res.id ? (
                     <input
                       type="text"
@@ -98,7 +133,7 @@ function ReservationTable() {
                     res.name
                   )}
                 </td>
-                <td className="p-4">
+                <td className="p-2 md:p-4">
                   {editing === res.id ? (
                     <>
                       <input
@@ -118,7 +153,7 @@ function ReservationTable() {
                     `${res.date} ${res.time}`
                   )}
                 </td>
-                <td className="p-4">
+                <td className="p-2 md:p-4">
                   {editing === res.id ? (
                     <input
                       type="text"
@@ -130,7 +165,7 @@ function ReservationTable() {
                     res.pax
                   )}
                 </td>
-                <td className="p-4">
+                <td className="p-2 md:p-4">
                   {editing === res.id ? (
                     <input
                       type="text"
@@ -142,7 +177,7 @@ function ReservationTable() {
                     res.seating
                   )}
                 </td>
-                <td className="p-4">
+                <td className="p-2 md:p-4">
                   {editing === res.id ? (
                     <input
                       type="text"
@@ -168,7 +203,7 @@ function ReservationTable() {
                     </div>
                   )}
                 </td>
-                <td className="p-4 flex space-x-2">
+                <td className="p-2 md:p-4 flex space-x-2">
                   {editing === res.id ? (
                     <button
                       className="bg-green-500 text-white px-2 py-1 rounded"
@@ -180,7 +215,7 @@ function ReservationTable() {
                     <>
                       <button
                         className="mr-2 text-blue-500"
-                        onClick={() => setEditing(res.id)}
+                        onClick={() => handleEditClick(res.id)}
                       >
                         <FaEdit />
                       </button>
@@ -199,10 +234,42 @@ function ReservationTable() {
         </table>
       </div>
 
+      <div className="flex justify-center space-x-2 mt-4">
+        <button
+          onClick={goToPreviousPage}
+          className="px-3 py-1 disabled:opacity-50"
+          disabled={currentPage === 1}
+        >
+          Previous
+        </button>
+        {Array.from({ length: totalPages }, (_, i) => (
+          <button
+            key={i}
+            onClick={() => goToPage(i + 1)}
+            className={`px-3 py-1 rounded-lg ${
+              currentPage === i + 1 ? 'bg-indigo-500 text-white' : 'bg-gray-200'
+            }`}
+          >
+            {i + 1}
+          </button>
+        ))}
+        <button
+          onClick={goToNextPage}
+          className="px-3 py-1 disabled:opacity-50"
+          disabled={currentPage === totalPages}
+        >
+          Next
+        </button>
+      </div>
+
+
+
       {modalOpen && (
         <ConfirmationModal
+          isOpen={modalOpen}
+          onClose={() => setModalOpen(false)}
           onConfirm={handleConfirmSave}
-          onCancel={() => setModalOpen(false)}
+          onCancel={handleCancelEdit}
         />
       )}
     </div>
