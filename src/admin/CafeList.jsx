@@ -82,20 +82,20 @@ function CafeList() {
 
   return (
     <div className="space-y-4 relative">
-      <h1 className="sm:text-lg md:text-2xl font-bold sticky top-0 z-10 p-4">Cafe List</h1>
+      <h1 className="sm:text-lg xl:text-2xl font-bold sticky top-0 z-10 p-4">Cafe List</h1>
 
       <div className="overflow-x-auto">
-        <table className="min-w-full bg-white table-fixed text-sm md:text-base">
+        <table className="min-w-full bg-white table-fixed text-sm xl:text-base">
           <thead>
             <tr>
-              <th className="p-2 md:p-4 w-1/8">ID</th>
-              <th className="p-2 md:p-4 w-1/8">Name</th>
-              <th className="p-2 md:p-4 w-1/8">Address</th>
-              <th className="p-2 md:p-4 w-1/8">Phone</th>
-              <th className="p-2 md:p-4 w-1/8">Description</th>
-              <th className="p-2 md:p-4 w-1/8">Open Hour</th>
-              <th className="p-2 md:p-4 w-1/8">Close Hour</th>
-              <th className="p-2 md:p-4 w-1/8">Actions</th>
+              <th className="p-2 xl:p-4 w-1/8">ID</th>
+              <th className="p-2 xl:p-4 w-1/8">Name</th>
+              <th className="p-2 xl:p-4 w-1/8">Address</th>
+              <th className="p-2 xl:p-4 w-1/8">Phone</th>
+              <th className="p-2 xl:p-4 w-1/8">Description</th>
+              <th className="p-2 xl:p-4 w-1/8">Open Hour</th>
+              <th className="p-2 xl:p-4 w-1/8">Close Hour</th>
+              <th className="p-2 xl:p-4 w-1/8">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -104,8 +104,8 @@ function CafeList() {
                 key={cafe.id}
                 className={index % 2 === 0 ? 'bg-indigo-200' : 'bg-white'}
               >
-                <td className="p-2 md:p-4">{cafe.id}</td>
-                <td className="p-2 md:p-4">
+                <td className="p-2 xl:p-4">{cafe.id}</td>
+                <td className="p-2 xl:p-4">
                   {editing === cafe.id ? (
                     <input
                       type="text"
@@ -117,7 +117,7 @@ function CafeList() {
                     cafe.name
                   )}
                 </td>
-                <td className="p-2 md:p-4">
+                <td className="p-2 xl:p-4">
                   {editing === cafe.id ? (
                     <input
                       type="text"
@@ -129,7 +129,7 @@ function CafeList() {
                     cafe.address
                   )}
                 </td>
-                <td className="p-2 md:p-4">
+                <td className="p-2 xl:p-4">
                   {editing === cafe.id ? (
                     <input
                       type="text"
@@ -141,7 +141,7 @@ function CafeList() {
                     cafe.phone
                   )}
                 </td>
-                <td className="p-2 md:p-4">
+                <td className="p-2 xl:p-4">
                   {editing === cafe.id ? (
                     <input
                       type="text"
@@ -167,7 +167,7 @@ function CafeList() {
                     </div>
                   )}
                 </td>
-                <td className="p-2 md:p-4">
+                <td className="p-2 xl:p-4">
                   {editing === cafe.id ? (
                     <input
                       type="time"
@@ -179,7 +179,7 @@ function CafeList() {
                     cafe.openHour
                   )}
                 </td>
-                <td className="p-2 md:p-4">
+                <td className="p-2 xl:p-4">
                   {editing === cafe.id ? (
                     <input
                       type="time"
@@ -191,7 +191,7 @@ function CafeList() {
                     cafe.closeHour
                   )}
                 </td>
-                <td className="p-2 md:p-4 flex space-x-2">
+                <td className="p-2 xl:p-4 flex space-x-2">
                   {editing === cafe.id ? (
                     <button
                       className="bg-green-500 text-white px-2 py-1 rounded"

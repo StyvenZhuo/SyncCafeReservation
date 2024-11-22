@@ -15,15 +15,15 @@ function Sidebar() {
   const isLogoutActive = location.pathname === '/';
 
   return (
-    <div className="pt-10 text-left flex flex-col md:w-2/12 bg-white text-black h-screen p-4">
+    <div className="pt-10 text-left flex flex-col xl:w-2/12 bg-white text-black h-screen p-4">
       <div className="flex-col">
-        <h2 className="text-2xl font-bold mb-4 hidden md:block">ADMIN</h2>
+        <h2 className="text-2xl font-bold mb-4 hidden xl:block">ADMIN</h2>
         <div className="flex">
-          <h2 className="text-md font-semibold m-2 hidden md:block">Menu</h2>
+          <h2 className="text-md font-semibold m-2 hidden xl:block">Menu</h2>
           {/* Hamburger menu for mobile */}
           <button
             onClick={toggleSidebar}
-            className="md:hidden text-black focus:outline-none"
+            className="xl:hidden text-black focus:outline-none"
           >
             <FaAlignJustify />
           </button>
@@ -32,7 +32,7 @@ function Sidebar() {
 
       {/* Sidebar content */}
       <nav
-        className={`space-y-2 mt-2 ${isOpen ? 'block' : 'hidden'} md:block`}
+        className={`space-y-2 mt-2 ${isOpen ? 'block' : 'hidden'} xl:block`}
       >
         <NavLink
           to="/admin" 

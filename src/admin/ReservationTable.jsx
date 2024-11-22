@@ -85,21 +85,21 @@ function ReservationTable() {
 
   return (
     <div className="space-y-4 relative">
-      <h1 className="sm:text-lg md:text-2xl font-bold sticky top-0  z-10 p-4">Reservations</h1>
+      <h1 className="sm:text-lg xl:text-2xl font-bold sticky top-0  z-10 p-4">Reservations</h1>
 
       {/* Responsive Table */}
       <div className="overflow-x-auto">
-        <table className="min-w-full bg-white table-fixed text-sm md:text-base">
+        <table className="min-w-full bg-white table-fixed text-sm xl:text-base">
           <thead>
             <tr>
-              <th className="p-2 md:p-4 w-1/8">Reserve No</th>
-              <th className="p-2 md:p-4 w-1/8">Cafe</th>
-              <th className="p-2 md:p-4 w-1/8">Guest Name</th>
-              <th className="p-2 md:p-4 w-1/8">Time & Date</th>
-              <th className="p-2 md:p-4 w-1/8">Pax</th>
-              <th className="p-2 md:p-4 w-1/8">Seating</th>
-              <th className="p-2 md:p-4 w-1/8">Notes</th>
-              <th className="p-2 md:p-4 w-1/8">Actions</th>
+              <th className="p-2 xl:p-4 w-1/8">Reserve No</th>
+              <th className="p-2 xl:p-4 w-1/8">Cafe</th>
+              <th className="p-2 xl:p-4 w-1/8">Guest Name</th>
+              <th className="p-2 xl:p-4 w-1/8">Time & Date</th>
+              <th className="p-2 xl:p-4 w-1/8">Pax</th>
+              <th className="p-2 xl:p-4 w-1/8">Seating</th>
+              <th className="p-2 xl:p-4 w-1/8">Notes</th>
+              <th className="p-2 xl:p-4 w-1/8">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -108,8 +108,8 @@ function ReservationTable() {
                 key={res.id}
                 className={index % 2 === 0 ? 'bg-indigo-200' : 'bg-white'}
               >
-                <td className="p-2 md:p-4">{res.id}</td>
-                <td className="p-2 md:p-4">
+                <td className="p-2 xl:p-4">{res.id}</td>
+                <td className="p-2 xl:p-4">
                   {editing === res.id ? (
                     <input
                       type="text"
@@ -121,7 +121,7 @@ function ReservationTable() {
                     res.cafe
                   )}
                 </td>
-                <td className="p-2 md:p-4">
+                <td className="p-2 xl:p-4">
                   {editing === res.id ? (
                     <input
                       type="text"
@@ -133,7 +133,7 @@ function ReservationTable() {
                     res.name
                   )}
                 </td>
-                <td className="p-2 md:p-4">
+                <td className="p-2 xl:p-4">
                   {editing === res.id ? (
                     <>
                       <input
@@ -153,7 +153,7 @@ function ReservationTable() {
                     `${res.date} ${res.time}`
                   )}
                 </td>
-                <td className="p-2 md:p-4">
+                <td className="p-2 xl:p-4">
                   {editing === res.id ? (
                     <input
                       type="text"
@@ -165,7 +165,7 @@ function ReservationTable() {
                     res.pax
                   )}
                 </td>
-                <td className="p-2 md:p-4">
+                <td className="p-2 xl:p-4">
                   {editing === res.id ? (
                     <input
                       type="text"
@@ -177,7 +177,7 @@ function ReservationTable() {
                     res.seating
                   )}
                 </td>
-                <td className="p-2 md:p-4">
+                <td className="p-2 xl:p-4">
                   {editing === res.id ? (
                     <input
                       type="text"
@@ -203,7 +203,7 @@ function ReservationTable() {
                     </div>
                   )}
                 </td>
-                <td className="p-2 md:p-4 flex space-x-2">
+                <td className="p-2 xl:p-4 flex space-x-2">
                   {editing === res.id ? (
                     <button
                       className="bg-green-500 text-white px-2 py-1 rounded"
