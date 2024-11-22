@@ -43,7 +43,7 @@ function CafeList() {
     );
     setEditing(null);
     setModalOpen(false);
-    setOriginalCafes([...cafes]); // Update original data after saving
+    setOriginalCafes([...cafes]); 
     setCurrentEdit({});
   };
 
@@ -69,12 +69,12 @@ function CafeList() {
   };
 
   const handleEditClick = (id) => {
-    setOriginalCafes([...cafes]); // Save current data before editing
+    setOriginalCafes([...cafes]); 
     setEditing(id);
   };
 
   const handleCancelEdit = () => {
-    setCafes([...originalCafes]); // Revert to original data
+    setCafes([...originalCafes]); 
     setEditing(null);
     setModalOpen(false);
     setCurrentEdit({});

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FaEdit, FaTrashAlt } from 'react-icons/fa'; // Import icons
+import { FaEdit, FaTrashAlt } from 'react-icons/fa'; 
 import ConfirmationModal from './ConfirmationModal';
 
 function ReservationTable() {
@@ -72,12 +72,12 @@ function ReservationTable() {
   const goToPage = (page) => setCurrentPage(page);
 
   const handleEditClick = (id) => {
-    setOriginalReservations([...reservations]); // Save current data before editing
+    setOriginalReservations([...reservations]); 
     setEditing(id);
   };
 
   const handleCancelEdit = () => {
-    setReservations([...originalReservations]); // Revert to original data
+    setReservations([...originalReservations]); 
     setEditing(null);
     setModalOpen(false);
     setCurrentEdit({});
