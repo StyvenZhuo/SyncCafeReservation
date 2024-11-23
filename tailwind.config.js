@@ -11,6 +11,14 @@ export default {
       },
     },
   },
+  theme: {
+    extend: {
+      colors: {
+        "soft-brown": "#d9c7a3", // Warna coklat muda
+        "soft-green": "#ffffff", // Warna hijau muda
+      },
+    },
+  },
   plugins: [],
 }
 
