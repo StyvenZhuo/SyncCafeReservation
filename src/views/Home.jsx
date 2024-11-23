@@ -10,6 +10,7 @@ function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userName, setUserName] = useState("Guest");
   const [showLoginPopup, setShowLoginPopup] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(false); 
 
   const reservations = [
     {
@@ -57,10 +58,25 @@ function Home() {
   ];
 
   const handleLogin = () => {
-    const userNameInput = document.getElementById("userNameInput").value; // Get the input value for username
-    setUserName(userNameInput);  // Update the username state with the input value
+    const userNameInput = document.getElementById("userNameInput").value;
+    const passwordInput = document.getElementById("passwordInput").value;
+    // Validate or handle login credentials here
+    console.log("Logged in with:", userNameInput, passwordInput);
+    setUserName(userNameInput);
     setIsLoggedIn(true);
-    setShowLoginPopup(false);  // Close the popup on successful login
+    setShowLoginPopup(false);
+  };
+
+  const handleSignUp = () => {
+    const userNameInput = document.getElementById("signUpUserNameInput").value;
+    const passwordInput = document.getElementById("signUpPasswordInput").value;
+    const emailInput = document.getElementById("signUpEmailInput").value;
+    // Handle sign-up logic here (e.g., save user data to database)
+    console.log("Signed up with:", userNameInput, emailInput, passwordInput);
+
+    setUserName(userNameInput);
+    setIsLoggedIn(true);
+    setShowLoginPopup(false);
   };
 
   const handleLogout = () => {
@@ -70,6 +86,11 @@ function Home() {
 
   const toggleLoginPopup = () => {
     setShowLoginPopup(!showLoginPopup);
+    setIsSignUp(false); // Reset sign-up form when opening the login popup
+  };
+
+  const toggleSignUp = () => {
+    setIsSignUp(!isSignUp);
   };
 
   return (
@@ -86,7 +107,7 @@ function Home() {
       <div className="relative flex flex-col md:flex-row w-full md:p-8">
         {/* Left Side (User Info and Welcome Section) */}
         <div className="flex-initial bg-opacity-90 p-6 rounded-lg shadow-ld w-full md:w-1/2">
-          <div className="flex flex-row items-center">--
+          <div className="flex flex-row items-center">
             <div className="bg-white flex flex-col lg:flex-row items-center p-4 rounded-lg shadow-md mr-5">
               <div className="flex items-center mb-4 lg:mb-0 lg:mr-5">
                 <img
@@ -157,91 +178,159 @@ function Home() {
           </h3>
 
           <div className="overflow-auto max-h-[573px] space-y-4">
-          {isLoggedIn ? (reservations.length > 0 ? (
-          <div className="space-y-4">
-          {reservations.map((reservation, i) => (
-            <div key={i}
-            className="bg-white rounded-lg shadow-lg overflow-hidden">
-              <img
-                src={reservation.imageSrc}
-                alt={reservation.name}
-                className="w-full h-52 object-cover"
-              />
-              <div className="p-4">
-                <h4 className="text-2xl font-light text-gray-800">{reservation.name}</h4>
-                <p className="text-s font-medium text-gray-600 mb-4">{reservation.location}</p>
-                {/* Card Content */}
-                <div className="bg-[#E8E8E8] mx-auto px-4 py-6 rounded-lg shadow-md">
-                  <div className="flex justify-between mb-2">
-                    <p className="text-[#343434] font-semibold">Date/Time :</p>
-                    <p className="opacity-50 font-medium">{reservation.datetime.Date} &nbsp; | &nbsp;  {reservation.datetime.Time}</p>
-                  </div>
-                  <div className="flex justify-between mb-2">
-                    <p className="text-[#343434] font-semibold">Guest Info :</p> 
-                    <p className="opacity-50 font-medium">{reservation.guestInfo.reserver} &nbsp; | &nbsp; {reservation.guestInfo.pax} Pax</p>
-                  </div>
-                  <div className="flex justify-between">
-                    <p className="text-[#343434] font-semibold">Status :</p>
-                    <p className={`${
-                      reservation.status === "Confirmed"
-                        ? "text-green-600"
-                        : reservation.status === "Pending"
-                        ? "text-yellow-600"
-                        : "text-red-600"
-                    } font-medium`}>{reservation.status}</p>
-                  </div>
+            {isLoggedIn ? (
+              reservations.length > 0 ? (
+                <div className="space-y-4">
+                  {reservations.map((reservation, i) => (
+                    <div
+                      key={i}
+                      className="bg-white rounded-lg shadow-lg overflow-hidden"
+                    >
+                      <img
+                        src={reservation.imageSrc}
+                        alt={reservation.name}
+                        className="w-full h-52 object-cover"
+                      />
+                      <div className="p-4">
+                        <h4 className="text-2xl font-light text-gray-800">
+                          {reservation.name}
+                        </h4>
+                        <p className="text-s font-medium text-gray-600 mb-4">
+                          {reservation.location}
+                        </p>
+                        <div className="bg-[#E8E8E8] mx-auto px-4 py-6 rounded-lg shadow-md">
+                          <div className="flex justify-between mb-2">
+                            <p className="text-[#343434] font-semibold">
+                              Date/Time :
+                            </p>
+                            <p className="opacity-50 font-medium">
+                              {reservation.datetime.Date} &nbsp; | &nbsp;{" "}
+                              {reservation.datetime.Time}
+                            </p>
+                          </div>
+                          <div className="flex justify-between mb-2">
+                            <p className="text-[#343434] font-semibold">
+                              Guest Info :
+                            </p>
+                            <p className="opacity-50 font-medium">
+                              {reservation.guestInfo.reserver} &nbsp; | &nbsp;
+                              {reservation.guestInfo.pax} Pax
+                            </p>
+                          </div>
+                          <div className="flex justify-between">
+                            <p className="text-[#343434] font-semibold">
+                              Status :
+                            </p>
+                            <p
+                              className={`${
+                                reservation.status === "Confirmed"
+                                  ? "text-green-600"
+                                  : reservation.status === "Pending"
+                                  ? "text-yellow-600"
+                                  : "text-red-600"
+                              } font-medium`}
+                            >
+                              {reservation.status}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div className="bg-white rounded-lg shadow-lg p-4">
-          <p className="text-gray-800">You haven’t made any reservations.</p>
-        </div>
-      )
-    ) : (
-      <div className="bg-white rounded-lg shadow-lg p-4">
-        <p className="text-gray-800">Please log in to view your reservation.</p>
-      </div>
-    )}
-  </div>
+              ) : (
+                <p className="text-white text-xl">No reservations yet.</p>
+              )
+            ) : (
+              <p className="text-white text-xl">Please log in to see reservations.</p>
+            )}
+          </div>
         </div>
       </div>
 
-      {/* Login Popup */}
+      {/* Login/Sign-Up Popup */}
       {showLoginPopup && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-20">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-11/12 max-w-sm">
-            <h2 className="text-lg font-semibold mb-4">Log In</h2>
-            <input
-              id="userNameInput" // Added id for name input
-              type="text"
-              placeholder="Enter your name"
-              className="w-full p-2 border border-gray-300 rounded mb-4"
-            />
-            <input
-              type="text"
-              placeholder="Enter username"
-              className="w-full p-2 border border-gray-300 rounded mb-4"
-            />
-            <input
-              type="password"
-              placeholder="Enter password"
-              className="w-full p-2 border border-gray-300 rounded mb-4"
-            />
-            <button
-              onClick={handleLogin}
-              className="w-full bg-gray-700 text-white py-2 rounded hover:bg-gray-600"
-            >
-              Log In
-            </button>
-            <button
-              onClick={toggleLoginPopup}
-              className="w-full text-center mt-4 text-gray-500 hover:text-gray-700"
-            >
-              Cancel
-            </button>
+        <div className="fixed inset-0 z-50 flex justify-center items-center bg-black bg-opacity-50">
+          <div className="bg-white p-8 rounded-xl shadow-xl w-full sm:w-96 md:w-[500px]">
+            <h2 className="text-2xl font-semibold mb-4">
+              {isSignUp ? "Sign Up" : "Log In"}
+            </h2>
+            {isSignUp ? (
+              <div>
+                <h6 className="ml-3  text-left font-bold">Username</h6>
+                <input
+                  type="text"
+                  id="signUpUserNameInput"
+                  placeholder="Username"
+                  className="w-full p-2 pl-4 mb-3 bg-gray-200 rounded-full"
+                />
+                <h6 className="ml-3  text-left font-bold">Email</h6>
+                <input
+                  type="email"
+                  id="signUpEmailInput"
+                  placeholder="something@gmail.com"
+                  className="w-full p-2 mb-3 pl-4 mb-3 bg-gray-200 rounded-full"
+                />
+                <h6 className="ml-3  text-left font-bold">Password</h6>
+                <input
+                  type="password"
+                  id="signUpPasswordInput"
+                  placeholder="Password"
+                  className="w-full p-2 mb-3 pl-4 mb-3 bg-gray-200 rounded-full"
+                />
+                <button
+                  onClick={handleSignUp}
+                  className="w-full p-2 mt-3 bg-gray-600 text-white rounded-full"
+                >
+                  Sign Up
+                </button>
+                <div className="mt-4 text-center">
+                  <p>
+                    Already have an account?{" "}
+                    <span
+                      onClick={toggleSignUp}
+                      className="text-gray-600 cursor-pointer"
+                    >
+                      Log In
+                    </span>
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div>
+                <h6 className="ml-3  text-left font-bold">Email</h6>
+                <input
+                  type="email"
+                  id="userNameInput"
+                  placeholder="something@gmail.com"
+                  className="w-full p-2 mb-3 pl-4 mb-3 bg-gray-200 rounded-full"
+                />
+                <h6 className="ml-3  text-left font-bold">Password</h6>
+                <input
+                  type="password"
+                  id="passwordInput"
+                  placeholder="Password"
+                  className="w-full p-2 mb-3 pl-4 mb-3 bg-gray-200 rounded-full"
+                />
+                <button
+                  onClick={handleLogin}
+                  className="w-full p-2 mt-3 bg-gray-600 text-white rounded-full"
+                >
+                  Log In
+                </button>
+                <div className="mt-4 text-center">
+                  <p>
+                    Don't have an account?{" "}
+                    <span
+                      onClick={toggleSignUp}
+                      className="text-gray-600 cursor-pointer"
+                    >
+                      Sign Up
+                    </span>
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}
