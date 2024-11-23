@@ -16,7 +16,7 @@ const cafes = [
     hours: '10:00 - 22:00',
     image: HomeBg,
     contact: '@cambacafe | +62-8123-45678-900 | cambacafe@gmail.com',
-    features: ['Free Wifi', 'Pet-Friendly', 'Power outlets', 'Outdoor seating'],
+    features: ['Free Wifi', 'Pet-Friendly', 'Power outlets', 'Outdoor and Indoor seating'],
   },
   {
     id: 2,
@@ -43,7 +43,7 @@ const cafes = [
     hours: '09:00 - 21:00',
     image: forestCafe,
     contact: '@forestcafe | +62-8123-98765-432 | forestcafe@gmail.com',
-    features: ['Pet-Friendly', 'Outdoor seating'],
+    features: ['Pet-Friendly', 'Outdoor and Indoor seating'],
   },
 ];
 
