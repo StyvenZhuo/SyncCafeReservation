@@ -67,61 +67,59 @@ const ReservationRecord = ({ onClose }) => {
 
         {/* Reservation List with Scroll */}
         <div className="text-left p-4 overflow-auto max-h-[50vh] [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300">
-  {reservations.map((reservation) => (
-    <div
-      key={reservation.id}
-      className="flex bg-gray-300 p-4 rounded-lg items-center mb-4"
-    >
-      {/* Image Section */}
-      <div className="w-1/3 flex justify-center">
-        <div className="md:w-full sm:w-24 h-24 rounded-lg overflow-hidden">
-          <img
-            src={reservation.image}
-            alt={reservation.name}
-            className="w-full h-full object-cover"
-          />
+          {reservations.map((reservation) => (
+            <div
+              key={reservation.id}
+              className="flex bg-gray-300 p-4 rounded-lg items-center mb-4"
+            >
+              {/* Image Section */}
+              <div className="w-1/3 flex justify-center">
+                <div className="md:w-full sm:w-24 h-24 rounded-lg overflow-hidden">
+                  <img
+                    src={reservation.image}
+                    alt={reservation.name}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </div>
+
+              {/* Info Section */}
+              <div className="md:w-1/3 sm:w-40% px-4">
+                <h4 className="font-bold text-lg mb-2">{reservation.name}</h4>
+                <div className="grid grid-cols-2 gap-y-1 gap-x-2  justify-between text-sm text-gray-700">
+                  {/* Guest Info */}
+                  <div className="flex flex-col">
+                    <p className="font-semibold">Guest</p>
+                  </div>
+                  <div className='flex flex-col'>
+                    <p className="font-semibold">Date / Time </p>
+                  </div>
+
+                  {/* Date/Time Info */}
+                  <div className="flex flex-col">
+                    <p>{reservation.guest} | {reservation.pax} </p>
+                  </div>
+                  <div className='flex-flex-col'>
+                    <p>{reservation.date} | {reservation.time}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Status Section */}
+              <div className="w-1/3 text-center font-semibold md:text-lg sm:text-xs">
+                <span
+                  className={`${
+                    reservation.status === "Confirmed"
+                      ? "text-green-500"
+                      : "text-red-500"
+                  }`}
+                >
+                  {reservation.status}
+                </span>
+              </div>
+            </div>
+          ))}
         </div>
-      </div>
-
-      {/* Info Section */}
-      <div className="md:w-1/3 sm:w-40% px-4">
-        <h4 className="font-bold text-lg mb-2">{reservation.name}</h4>
-        <div className="grid grid-cols-2 gap-y-1 gap-x-2  justify-between text-sm text-gray-700">
-          {/* Guest Info */}
-          <div className="flex flex-col">
-            <p className="font-semibold">Guest</p>
-          </div>
-          <div className='flex flex-col'>
-            <p className="font-semibold">Date / Time </p>
-          </div>
-
-          {/* Date/Time Info */}
-          <div className="flex flex-col">
-            <p>{reservation.guest} | {reservation.pax} </p>
-          </div>
-          <div className='flex-flex-col'>
-            <p>{reservation.date} | {reservation.time}</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Status Section */}
-      <div className="w-1/3 text-center font-semibold md:text-lg sm:text-xs">
-        <span
-          className={`${
-            reservation.status === "Confirmed"
-              ? "text-green-500"
-              : "text-red-500"
-          }`}
-        >
-          {reservation.status}
-        </span>
-      </div>
-    </div>
-  ))}
-</div>
-
-
       </div>
     </div>
   );
