@@ -17,6 +17,19 @@ function CafeList() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
+  const handleAddCafe = () => {
+    const newCafe = {
+      id: cafes.length + 1,
+      name: 'New Cafe',
+      address: 'New Address',
+      phone: '+62 000 0000 0000',
+      description: 'New description...',
+      openHour: '08:00',
+      closeHour: '20:00',
+    };
+    setCafes([newCafe, ...cafes]); // Add the new cafe at the top
+  };
+
   const totalPages = Math.ceil(cafes.length / itemsPerPage);
   const paginatedData = cafes.slice(
     (currentPage - 1) * itemsPerPage,
@@ -82,7 +95,15 @@ function CafeList() {
 
   return (
     <div className="space-y-4 relative">
-      <h1 className="sm:text-lg xl:text-2xl font-bold sticky top-0 z-10 p-4">Cafe List</h1>
+      <div className="flex justify-between items-center sticky top-0 z-10 p-4">
+        <h1 className="sm:text-lg xl:text-2xl font-bold">Cafe List</h1>
+        <button
+          className="bg-indigo-500 text-white px-4 py-2 rounded-lg hover:bg-indigo-600"
+          onClick={handleAddCafe}
+        >
+          Add
+        </button>
+      </div>
 
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white table-fixed text-sm xl:text-base">
