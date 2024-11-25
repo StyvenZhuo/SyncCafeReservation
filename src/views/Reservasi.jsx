@@ -47,7 +47,7 @@ const cafes = [
   },
 ];
 
-function Reservasi() {
+function Reservasi({onClose}) {
   const [name, setName] = useState('');
   const [pax, setPax] = useState(0);
   const [date, setDate] = useState('');
@@ -75,7 +75,7 @@ function Reservasi() {
   };
 
   return (
-    <div className="min-h-screen flex justify-center items-center bg-gradient-to-br from-soft-brown to-soft-green relative">
+    <div className="z-50 inset-0 min-h-screen flex justify-center items-center bg-black bg-opacity-50 backdrop-blur-sm fixed">
     {/* Background Blur */}
     <div className="absolute inset-0 bg-gradient-to-br from-soft-brown to-soft-green blur-xl opacity-80"></div>
 
@@ -187,7 +187,7 @@ function Reservasi() {
 
           {/* Tombol Back */}
           <button
-            onClick={() => navigate('/')}
+            onClick={onClose}
             className="mt-4 w-full bg-gray-300 text-gray-800 py-2 rounded-md hover:bg-gray-400 transition-colors"
           >
             Back to Home

@@ -6,12 +6,14 @@ import careCafe from "../assets/Care_Home.jpg";
 import forestCafe from "../assets/Forest_Home.png";
 import livinCafe from "../assets/Livin_Home.png";
 import ReservationRecord from "./popup";
+import Reservasi from './Reservasi';
 
 function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userName, setUserName] = useState("Guest");
   const [showLoginPopup, setShowLoginPopup] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false); 
+  const [showModal, setShowModal] = useState(false);
 
   const reservations = [
     {
@@ -70,6 +72,10 @@ function Home() {
     setShowReservationModal(false);
   };
 
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
   const handleSignUp = () => {
     const userNameInput = document.getElementById("signUpUserNameInput").value;
     const passwordInput = document.getElementById("signUpPasswordInput").value;
@@ -106,7 +112,7 @@ function Home() {
   };
 
   return (
-    <div className="relative font-xl min-h-screen flex justify-center bg-gray-800">
+    <div className="relative font-xl min-h-screen flex justify-center bg-gray-800 ">
       {/* Background Image */}
       <img
         src={homeBg}
@@ -128,7 +134,7 @@ function Home() {
                   className="w-12 h-12 lg:w-15 lg:h-15 mr-3"
                 />
                 <div className="text-left">
-                  <p className="text-sm text-gray-500 font-semibold text-[#343434]">
+                  <p className="text-sm text-gray-500 font-semibold ">
                     Welcome,
                   </p>
                   <h1 className="text-2xl lg:text-3xl font-light">
@@ -150,12 +156,10 @@ function Home() {
                 className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 mx-auto group-hover:brightness-50 transition duration-200"
               />
             </a>
-
-        {/* Modal Reservasi History*/}
-        {showReservationModal && (
-          <ReservationRecord onClose={handleCloseReservationModal} />
-        )}
-       
+            {/* Modal Reservasi History*/}
+            {showReservationModal && (
+              <ReservationRecord onClose={handleCloseReservationModal} />
+            )}
           </div>
 
           {/* Reserve Section */}
@@ -176,7 +180,7 @@ function Home() {
                 if (!isLoggedIn) {
                   setShowLoginPopup(true);
                 } else {
-                  window.location.href = "./reservasi";
+                  setShowModal(true);
                 }
               }}
               className="text-2xl sm:text-3xl md:text-4xl font-light mt-4 px-6 py-3 bg-white rounded-full hover:bg-[#343434] transition duration-200"
@@ -185,6 +189,8 @@ function Home() {
             </button>
           </div>
         </div>
+
+        
 
         {/* Right Side (Recent Reservations) */}
         <div className="ml-auto max-w-[500px] flex-initial p-6 rounded-lg shadow-lg overflow-auto sm:h-auto md:h-auto md:w-1/2 mt-8 sm:mt-4 md:mt-0 justify-between">
@@ -195,7 +201,7 @@ function Home() {
             Recent &nbsp; Reservations
           </h3>
 
-          <div className="overflow-auto max-h-[573px] space-y-4">
+          <div className="overflow-auto pr-3 max-h-[573px] space-y-4 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300">
           {isLoggedIn ? (reservations.length > 0 ? (
           <div className="space-y-4">
           {reservations.map((reservation, i) => (
@@ -250,7 +256,7 @@ function Home() {
 
       {/* Login/Sign-Up Popup */}
       {showLoginPopup && (
-        <div className="fixed inset-0 z-50 flex justify-center items-center bg-black bg-opacity-50" onClick={() => setShowLoginPopup(false)}>
+        <div className="fixed inset-0 z-50 flex justify-center items-center bg-black bg-opacity-50" >
           <div className="bg-white p-8 rounded-xl shadow-xl w-full sm:w-96 md:w-[500px]">
             <h2 className="text-2xl font-semibold mb-4">
               {isSignUp ? "Sign Up" : "Log In"}
@@ -269,14 +275,14 @@ function Home() {
                   type="email"
                   id="signUpEmailInput"
                   placeholder="something@gmail.com"
-                  className="w-full p-2 mb-3 pl-4 mb-3 bg-gray-200 rounded-full"
+                  className="w-full p-2 pl-4 mb-3 bg-gray-200 rounded-full"
                 />
                 <h6 className="ml-3  text-left font-bold">Password</h6>
                 <input
                   type="password"
                   id="signUpPasswordInput"
                   placeholder="Password"
-                  className="w-full p-2 mb-3 pl-4 mb-3 bg-gray-200 rounded-full"
+                  className="w-full p-2 pl-4 mb-3 bg-gray-200 rounded-full"
                 />
                 <button
                   onClick={handleSignUp}
@@ -303,14 +309,14 @@ function Home() {
                   type="email"
                   id="userNameInput"
                   placeholder="something@gmail.com"
-                  className="w-full p-2 mb-3 pl-4 mb-3 bg-gray-200 rounded-full"
+                  className="w-full p-2 pl-4 mb-3 bg-gray-200 rounded-full"
                 />
                 <h6 className="ml-3  text-left font-bold">Password</h6>
                 <input
                   type="password"
                   id="passwordInput"
                   placeholder="Password"
-                  className="w-full p-2 mb-3 pl-4 mb-3 bg-gray-200 rounded-full"
+                  className="w-full p-2 pl-4 mb-3 bg-gray-200 rounded-full"
                 />
                 <button
                   onClick={handleLogin}
@@ -333,6 +339,10 @@ function Home() {
             )}
           </div>
         </div>
+      )}
+
+      {showModal && (
+          <Reservasi onClose={handleCloseModal} />
       )}
     </div>
   );
