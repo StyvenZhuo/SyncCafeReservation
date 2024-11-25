@@ -1,53 +1,53 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate untuk navigasi
 
 // Import gambar dari folder assets
 import HomeBg from '../assets/Home-bg.png';
-import Care from '../assets/Care Cafe.png';
-import Livin from '../assets/Livin Cafe.png';
+import careCafe from "../assets/Care_Home.jpg";
+import forestCafe from "../assets/Forest_Home.png";
+import livinCafe from "../assets/Livin_Home.png";
 
+// Data cafe
 const cafes = [
   {
     id: 1,
     name: 'Camba Cafe',
     address: 'City here, block there, road here, building 010A-26',
     hours: '10:00 - 22:00',
-    image: HomeBg, 
+    image: HomeBg,
     contact: '@cambacafe | +62-8123-45678-900 | cambacafe@gmail.com',
-    features: ['Free Wifi', 'Pet-Friendly', 'Power outlets', 'Outdoor seating'],
+    features: ['Free Wifi', 'Pet-Friendly', 'Power outlets', 'Outdoor and Indoor seating'],
   },
   {
     id: 2,
-    name: 'Another Cafe',
-    address: 'Another address',
-    hours: '09:00 - 20:00',
-    image: Care, 
-    contact: '@anothercafe | +62-8123-98765-432 | anothercafe@gmail.com',
-    features: ['Pet-Friendly', 'Outdoor seating'],
+    name: 'Care Cafe',
+    address: 'City here, block there, road here, building 21A-05',
+    hours: '09:00 - 21:00',
+    image: careCafe,
+    contact: '@carecafe | +62-8123-45678-101 | carecafe@gmail.com',
+    features: ['Free Wifi', 'Cozy Seating', 'Family-Friendly', 'Outdoor seating'],
   },
-
   {
     id: 3,
-    name: 'Another Cafe',
-    address: 'Another address',
-    hours: '09:00 - 20:00',
-    image: Livin,
-    contact: '@anothercafe | +62-8123-98765-432 | anothercafe@gmail.com',
-    features: ['Pet-Friendly', 'Outdoor seating'],
+    name: 'Livin Cafe',
+    address: 'City here, block there, road here, building 07E-16',
+    hours: '09:00 - 23:00',
+    image: livinCafe,
+    contact: '@livincafe | +62-8123-98765-432 | livincafe@gmail.com',
+    features: ['Pet-Friendly', 'Power Outlets', 'Live Music', 'Indoor seating'],
   },
-
   {
     id: 4,
-    name: 'Another Cafe',
-    address: 'Another address',
-    hours: '09:00 - 20:00',
-    image: Livin,
-    contact: '@anothercafe | +62-8123-98765-432 | anothercafe@gmail.com',
-    features: ['Pet-Friendly', 'Outdoor seating'],
+    name: 'Forest Cafe',
+    address: 'City here, block there, road here, building 03C-12',
+    hours: '09:00 - 21:00',
+    image: forestCafe,
+    contact: '@forestcafe | +62-8123-98765-432 | forestcafe@gmail.com',
+    features: ['Pet-Friendly', 'Outdoor and Indoor seating'],
   },
-  // Tambahkan data cafe lainnya
 ];
 
-function Reservasi() {
+function Reservasi({onClose}) {
   const [name, setName] = useState('');
   const [pax, setPax] = useState(0);
   const [date, setDate] = useState('');
@@ -55,14 +55,37 @@ function Reservasi() {
   const [seating, setSeating] = useState('Indoor');
   const [notes, setNotes] = useState('');
 
+  const navigate = useNavigate(); // Inisialisasi navigate untuk navigasi
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const reservasiData = {
+      name,
+      pax,
+      date,
+      time,
+      seating,
+      notes,
+    };
+
+    console.log('Data Reservasi:', reservasiData);
+    alert('Reservasi berhasil disimpan!');
+    navigate('/'); // Navigasi kembali ke halaman utama setelah submit
+  };
+
   return (
-    <div className="font-poppins flex justify-center items-center min-h-screen bg-gray-100 px-4">
-      <div className="bg-gray-200 rounded-lg shadow-lg p-6 w-full max-w-4xl grid grid-cols-1 lg:grid-cols-2 gap-8">
-        
-         {/* Form Reservasi */}
-         <div>
+    <div className="z-50 inset-0 min-h-screen flex justify-center items-center bg-black bg-opacity-50 backdrop-blur-sm fixed">
+    {/* Background Blur */}
+    <div className="absolute inset-0 bg-gradient-to-br from-soft-brown to-soft-green blur-xl opacity-80"></div>
+
+    {/* Card Reservasi */}
+    <div className="relative bg-white/90 backdrop-blur-lg rounded-lg shadow-2xl p-6 w-full max-w-5xl grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+        {/* Form Reservasi */}
+        <div>
           <h2 className="text-4xl font-bold text-gray-800 mb-6 text-center lg:text-left">Please fill the form</h2>
-          <form className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div className="flex flex-col lg:flex-row items-center gap-4">
               <label className="flex-grow w-full">
                 <span className="block text-gray-600 font-normal lg:text-left">Guest name :</span>
@@ -121,18 +144,22 @@ function Reservasi() {
             </div>
 
             <div>
-              <span className="block text-gray-600 font-normal lg:text-left">Seating options :</span>
+              <span className="block text-gray-600 font-normal lg:text-left mb-2">Seating options :</span>
               <div className="flex space-x-4">
                 <button
                   type="button"
-                  className={`px-4 py-2 rounded-md ${seating === 'Indoor' ? 'bg-gray-800 text-white' : 'bg-gray-300'}`}
+                  className={`px-4 py-2 rounded-md ${
+                    seating === 'Indoor' ? 'bg-gray-800 text-white' : 'bg-gray-300'
+                  }`}
                   onClick={() => setSeating('Indoor')}
                 >
                   Indoor
                 </button>
                 <button
                   type="button"
-                  className={`px-4 py-2 rounded-md ${seating === 'Outdoor' ? 'bg-gray-800 text-white' : 'bg-gray-300'}`}
+                  className={`px-4 py-2 rounded-md ${
+                    seating === 'Outdoor' ? 'bg-gray-800 text-white' : 'bg-gray-300'
+                  }`}
                   onClick={() => setSeating('Outdoor')}
                 >
                   Outdoor
@@ -157,6 +184,14 @@ function Reservasi() {
               Reserve
             </button>
           </form>
+
+          {/* Tombol Back */}
+          <button
+            onClick={onClose}
+            className="mt-4 w-full bg-gray-300 text-gray-800 py-2 rounded-md hover:bg-gray-400 transition-colors"
+          >
+            Back to Home
+          </button>
         </div>
 
         {/* Pilihan Cafe (Scrollable Horizontal) */}
