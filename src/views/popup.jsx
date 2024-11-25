@@ -3,6 +3,7 @@ import CareCafe from '../assets/Care Cafe.png';
 import LivinCafe from '../assets/Livin Cafe.png';
 import ForestCafe from '../assets/Forest Cafe.png';
 import CambaCafe from '../assets/Home-bg.png';
+import { FaXmark } from "react-icons/fa6";
 
 const reservations = [
   {
@@ -17,7 +18,7 @@ const reservations = [
   },
   {
     id: 2,
-    name: "Livin’ Cafe",
+    name: "Livin' Cafe",
     guest: "Halsin",
     pax: 6,
     date: "20.11.24",
@@ -50,8 +51,8 @@ const reservations = [
 
 const ReservationRecord = ({ onClose }) => {
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 font-poppins">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-3xl max-h-[80vh]">
+    <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 backdrop-blur-sm z-50">
+      <div className="bg-white p-6 rounded-lg shadow-lg w-full h-2/3   md:max-w-2xl  lg:max-w-4xl">
         {/* Header */}
         <div className="flex justify-center items-center relative mb-4">
           <h2 className="text-xl font-bold text-center">Reservation Record</h2>
@@ -59,36 +60,68 @@ const ReservationRecord = ({ onClose }) => {
             onClick={onClose}
             className="absolute right-0 text-gray-500 hover:text-gray-700"
           >
-            &times;
+            <FaXmark />
           </button>
         </div>
 
 
         {/* Reservation List with Scroll */}
-        <div className="space-y-4 overflow-y-scroll max-h-[60vh]">
-          {reservations.map((reservation) => (
-            <div key={reservation.id} className="flex items-center bg-gray-100 p-4 rounded-lg">
-              <img
-                src={reservation.image}
-                alt={reservation.name}
-                className="w-60 h-20 rounded-lg object-cover"
-              />
-              <div className="ml-4 flex-1">
-                <h3 className="text-lg text-left font-bold">{reservation.name}</h3>
-                <p className="text-sm text-left text-gray-600 font-bold">Guest <span className="ml-20">Date / Time</span></p>
-                <p className="text-sm text-left text-gray-600">{reservation.guest} | {reservation.pax} pax <span className="ml-10">{reservation.date} | {reservation.time}</span></p>
-                
-              </div>
-              <span
-                className={`font-semibold ${
-                  reservation.status === "Confirmed" ? "text-green-500" : "text-red-500"
-                }`}
-              >
-                {reservation.status}
-              </span>
-            </div>
-          ))}
+        <div className="text-left p-4 overflow-auto max-h-[50vh] [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300">
+  {reservations.map((reservation) => (
+    <div
+      key={reservation.id}
+      className="flex bg-gray-300 p-4 rounded-lg items-center mb-4"
+    >
+      {/* Image Section */}
+      <div className="w-1/3 flex justify-center">
+        <div className="md:w-full sm:w-24 h-24 rounded-lg overflow-hidden">
+          <img
+            src={reservation.image}
+            alt={reservation.name}
+            className="w-full h-full object-cover"
+          />
         </div>
+      </div>
+
+      {/* Info Section */}
+      <div className="md:w-1/3 sm:w-40% px-4">
+        <h4 className="font-bold text-lg mb-2">{reservation.name}</h4>
+        <div className="grid grid-cols-2 gap-y-1 gap-x-2  justify-between text-sm text-gray-700">
+          {/* Guest Info */}
+          <div className="flex flex-col">
+            <p className="font-semibold">Guest</p>
+          </div>
+          <div className='flex flex-col'>
+            <p className="font-semibold">Date / Time </p>
+          </div>
+
+          {/* Date/Time Info */}
+          <div className="flex flex-col">
+            <p>{reservation.guest} | {reservation.pax} </p>
+          </div>
+          <div className='flex-flex-col'>
+            <p>{reservation.date} | {reservation.time}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Status Section */}
+      <div className="w-1/3 text-center font-semibold md:text-lg sm:text-xs">
+        <span
+          className={`${
+            reservation.status === "Confirmed"
+              ? "text-green-500"
+              : "text-red-500"
+          }`}
+        >
+          {reservation.status}
+        </span>
+      </div>
+    </div>
+  ))}
+</div>
+
+
       </div>
     </div>
   );

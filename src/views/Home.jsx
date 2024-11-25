@@ -5,6 +5,7 @@ import history from "../assets/button-history.png";
 import careCafe from "../assets/Care_Home.jpg";
 import forestCafe from "../assets/Forest_Home.png";
 import livinCafe from "../assets/Livin_Home.png";
+import ReservationRecord from "./popup";
 
 function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -56,15 +57,17 @@ function Home() {
       imageSrc: forestCafe,
     },
   ];
+  
+  
 
-  const handleLogin = () => {
-    const userNameInput = document.getElementById("userNameInput").value;
-    const passwordInput = document.getElementById("passwordInput").value;
-    // Validate or handle login credentials here
-    console.log("Logged in with:", userNameInput, passwordInput);
-    setUserName(userNameInput);
-    setIsLoggedIn(true);
-    setShowLoginPopup(false);
+  const [showReservationModal, setShowReservationModal] = useState(false);
+
+  const handleShowReservationModal = () => {
+    setShowReservationModal(true);
+  };
+
+  const handleCloseReservationModal = () => {
+    setShowReservationModal(false);
   };
 
   const handleSignUp = () => {
@@ -77,6 +80,15 @@ function Home() {
     setUserName(userNameInput);
     setIsLoggedIn(true);
     setShowLoginPopup(false);
+  };
+
+
+  const handleLogin = () => {
+    const userNameInput = document.getElementById("userNameInput").value; // Get the input value for username
+    const passwordInput = document.getElementById("passwordInput").value;
+    setUserName(userNameInput);  // Update the username state with the input value
+    setIsLoggedIn(true);
+    setShowLoginPopup(false);  // Close the popup on successful login
   };
 
   const handleLogout = () => {
@@ -131,13 +143,19 @@ function Home() {
                 {isLoggedIn ? "Log Out" : "Log In"}
               </button>
             </div>
-            <a href="./popup" className="block group">
+            <a onClick={handleShowReservationModal} className="block group">
               <img
                 src={history}
                 alt="History"
                 className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 mx-auto group-hover:brightness-50 transition duration-200"
               />
             </a>
+
+        {/* Modal Reservasi History*/}
+        {showReservationModal && (
+          <ReservationRecord onClose={handleCloseReservationModal} />
+        )}
+       
           </div>
 
           {/* Reserve Section */}
@@ -178,73 +196,55 @@ function Home() {
           </h3>
 
           <div className="overflow-auto max-h-[573px] space-y-4">
-            {isLoggedIn ? (
-              reservations.length > 0 ? (
-                <div className="space-y-4">
-                  {reservations.map((reservation, i) => (
-                    <div
-                      key={i}
-                      className="bg-white rounded-lg shadow-lg overflow-hidden"
-                    >
-                      <img
-                        src={reservation.imageSrc}
-                        alt={reservation.name}
-                        className="w-full h-52 object-cover"
-                      />
-                      <div className="p-4">
-                        <h4 className="text-2xl font-light text-gray-800">
-                          {reservation.name}
-                        </h4>
-                        <p className="text-s font-medium text-gray-600 mb-4">
-                          {reservation.location}
-                        </p>
-                        <div className="bg-[#E8E8E8] mx-auto px-4 py-6 rounded-lg shadow-md">
-                          <div className="flex justify-between mb-2">
-                            <p className="text-[#343434] font-semibold">
-                              Date/Time :
-                            </p>
-                            <p className="opacity-50 font-medium">
-                              {reservation.datetime.Date} &nbsp; | &nbsp;{" "}
-                              {reservation.datetime.Time}
-                            </p>
-                          </div>
-                          <div className="flex justify-between mb-2">
-                            <p className="text-[#343434] font-semibold">
-                              Guest Info :
-                            </p>
-                            <p className="opacity-50 font-medium">
-                              {reservation.guestInfo.reserver} &nbsp; | &nbsp;
-                              {reservation.guestInfo.pax} Pax
-                            </p>
-                          </div>
-                          <div className="flex justify-between">
-                            <p className="text-[#343434] font-semibold">
-                              Status :
-                            </p>
-                            <p
-                              className={`${
-                                reservation.status === "Confirmed"
-                                  ? "text-green-600"
-                                  : reservation.status === "Pending"
-                                  ? "text-yellow-600"
-                                  : "text-red-600"
-                              } font-medium`}
-                            >
-                              {reservation.status}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+          {isLoggedIn ? (reservations.length > 0 ? (
+          <div className="space-y-4">
+          {reservations.map((reservation, i) => (
+            <div key={i}
+            className="bg-white rounded-lg shadow-lg overflow-hidden">
+              <img
+                src={reservation.imageSrc}
+                alt={reservation.name}
+                className="w-full h-52 object-cover"
+              />
+              <div className="p-4">
+                <h4 className="text-2xl font-light text-gray-800">{reservation.name}</h4>
+                <p className="text-s font-medium text-gray-600 mb-4">{reservation.location}</p>
+                {/* Card Content */}
+                <div className="bg-[#E8E8E8] mx-auto px-4 py-6 rounded-lg shadow-md">
+                  <div className="flex justify-between mb-2">
+                    <p className="text-[#343434] font-semibold">Date/Time :</p>
+                    <p className="opacity-50 font-medium">{reservation.datetime.Date} &nbsp; | &nbsp;  {reservation.datetime.Time}</p>
+                  </div>
+                  <div className="flex justify-between mb-2">
+                    <p className="text-[#343434] font-semibold">Guest Info :</p> 
+                    <p className="opacity-50 font-medium">{reservation.guestInfo.reserver} &nbsp; | &nbsp; {reservation.guestInfo.pax} Pax</p>
+                  </div>
+                  <div className="flex justify-between">
+                    <p className="text-[#343434] font-semibold">Status :</p>
+                    <p className={`${
+                      reservation.status === "Confirmed"
+                        ? "text-green-600"
+                        : reservation.status === "Pending"
+                        ? "text-yellow-600"
+                        : "text-red-600"
+                    } font-medium`}>{reservation.status}</p>
+                  </div>
                 </div>
-              ) : (
-                <p className="text-white text-xl">No reservations yet.</p>
-              )
-            ) : (
-              <p className="text-white text-xl">Please log in to see reservations.</p>
-            )}
-          </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="bg-white rounded-lg shadow-lg p-4">
+          <p className="text-gray-800">You haven't made any reservations.</p>
+        </div>
+      )
+    ) : (
+      <div className="bg-white rounded-lg shadow-lg p-4">
+        <p className="text-gray-800">Please log in to view your reservation.</p>
+      </div>
+    )}
+  </div>
         </div>
       </div>
 
