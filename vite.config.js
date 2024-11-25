@@ -44,9 +44,21 @@ export default defineConfig({
     server: {
         proxy: {
             '^/weatherforecast': {
-                target,
+                target: 'https://localhost:7097',
                 secure: false
-            }
+            },
+            '^/api/LoginUser/authenticate': {
+                target: 'https://localhost:7097',
+                secure: false
+            },
+            '^/cafes': {
+                target: 'https://localhost:7097',
+                secure: false
+            },
+            '^/reservations': {
+                target: 'https://localhost:7097',
+                secure: false
+            },
         },
         port: 5173,
         https: {
