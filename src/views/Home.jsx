@@ -304,11 +304,11 @@ function Home() {
               </div>
             ) : (
               <div>
-                <h6 className="ml-3  text-left font-bold">Email</h6>
+                <h6 className="ml-3  text-left font-bold">Username</h6>
                 <input
-                  type="email"
+                  type="text"
                   id="userNameInput"
-                  placeholder="something@gmail.com"
+                  placeholder="Name"
                   className="w-full p-2 pl-4 mb-3 bg-gray-200 rounded-full"
                 />
                 <h6 className="ml-3  text-left font-bold">Password</h6>
@@ -318,6 +318,10 @@ function Home() {
                   placeholder="Password"
                   className="w-full p-2 pl-4 mb-3 bg-gray-200 rounded-full"
                 />
+                <div className="flex">
+                  <input type="checkbox" id="checkbox" className="ml-2" />
+                  <p className="p-2 text-sm">Remember Me</p>
+                </div>
                 <button
                   onClick={handleLogin}
                   className="w-full p-2 mt-3 bg-gray-600 text-white rounded-full"
