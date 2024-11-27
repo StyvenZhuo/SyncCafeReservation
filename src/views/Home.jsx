@@ -10,10 +10,13 @@ import Reservasi from './Reservasi';
 
 function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userName, setUserName] = useState("Guest");
+  const [Username, setUsername] = useState();
   const [showLoginPopup, setShowLoginPopup] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false); 
   const [showModal, setShowModal] = useState(false);
+  const [Id, setId] = useState();
+  const [Email, setEmail] = useState();
+  const [PasswordHash, setPasswordHash] = useState();
 
   const reservations = [
     {
@@ -77,25 +80,19 @@ function Home() {
   };
 
   const handleSignUp = () => {
-    const userNameInput = document.getElementById("signUpUserNameInput").value;
-    const passwordInput = document.getElementById("signUpPasswordInput").value;
-    const emailInput = document.getElementById("signUpEmailInput").value;
+    const UsernameInput = document.getElementById("signUpUserNameInput").value;
+    const PasswordHashInput = document.getElementById("signUpPasswordHashInput").value;
+    const EmailInput = document.getElementById("signUpEmailInput").value;
     // Handle sign-up logic here (e.g., save user data to database)
-    console.log("Signed up with:", userNameInput, emailInput, passwordInput);
+    console.log("Signed up with:", UsernameInput, EmailInput, PasswordHashInput);
 
-    setUserName(userNameInput);
+    setUserName(UsernameInput);
     setIsLoggedIn(true);
     setShowLoginPopup(false);
   };
 
 
-  const handleLogin = () => {
-    const userNameInput = document.getElementById("userNameInput").value; // Get the input value for username
-    const passwordInput = document.getElementById("passwordInput").value;
-    setUserName(userNameInput);  // Update the username state with the input value
-    setIsLoggedIn(true);
-    setShowLoginPopup(false);  // Close the popup on successful login
-  };
+
 
   const handleLogout = () => {
     setIsLoggedIn(false);
@@ -110,6 +107,57 @@ function Home() {
   const toggleSignUp = () => {
     setIsSignUp(!isSignUp);
   };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // post data to the /register api
+    fetch("/api/LoginUser/authenticate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        Id: Id,
+        Username: Username,
+        Email: Email,
+        PasswordHash: PasswordHash,
+      }),
+    })
+ 
+      .then((data) => {
+        console.log(data);
+        if (data.ok) setIsLoggedIn(true), toggleLoginPopup();})
+      .catch((error) => {
+        // handle network error
+        console.error(error);
+      });
+  }
+
+  const handleSubmitRegister = (e) => {
+    e.preventDefault();
+    // post data to the /register api
+    fetch("/api/LoginUser/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        Id: Id,
+        Username: Username,
+        Email: Email,
+        PasswordHash: PasswordHash,
+      }),
+    })
+ 
+      .then((data) => {
+        console.log(data);
+        if (data.ok) setIsLoggedIn(true), toggleLoginPopup();})
+      .catch((error) => {
+        // handle network error
+        console.error(error);
+      });
+  }
+    
 
   return (
     <div className="relative font-xl min-h-screen flex justify-center bg-gray-800 ">
@@ -138,7 +186,7 @@ function Home() {
                     Welcome,
                   </p>
                   <h1 className="text-2xl lg:text-3xl font-light">
-                    {isLoggedIn ? userName : "Guest"}
+                    {isLoggedIn ? Username : "Guest"}
                   </h1>
                 </div>
               </div>
@@ -270,27 +318,39 @@ function Home() {
               <div>
                 <h6 className="ml-3  text-left font-bold">Username</h6>
                 <input
+                  id="Username" // Added id for name input
+                  name="Username"
                   type="text"
-                  id="signUpUserNameInput"
-                  placeholder="Username"
+                  required
+                  value={Username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="Enter your name" 
                   className="w-full p-2 pl-4 mb-3 bg-gray-200 rounded-full"
                 />
                 <h6 className="ml-3  text-left font-bold">Email</h6>
                 <input
-                  type="email"
-                  id="signUpEmailInput"
-                  placeholder="something@gmail.com"
+                  id="Email"
+                  name="Email"
+                  type="text"
+                  required
+                  value={Email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter password"
                   className="w-full p-2 pl-4 mb-3 bg-gray-200 rounded-full"
                 />
                 <h6 className="ml-3  text-left font-bold">Password</h6>
                 <input
+                  id="PasswordHash"
+                  name="PasswordHash"
                   type="password"
-                  id="signUpPasswordInput"
-                  placeholder="Password"
+                  required
+                  value={PasswordHash}
+                  onChange={(e) => setPasswordHash(e.target.value)}
+                  placeholder="Enter password"
                   className="w-full p-2 pl-4 mb-3 bg-gray-200 rounded-full"
                 />
                 <button
-                  onClick={handleSignUp}
+                  onClick={handleSubmitRegister}
                   className="w-full p-2 mt-3 bg-gray-600 text-white rounded-full"
                 >
                   Sign Up
@@ -307,20 +367,30 @@ function Home() {
                   </p>
                 </div>
               </div>
+
             ) : (
+
               <div>
                 <h6 className="ml-3  text-left font-bold">Username</h6>
                 <input
+                  id="Username" // Added id for name input
+                  name="Username"
                   type="text"
-                  id="userNameInput"
-                  placeholder="Name"
+                  required
+                  value={Username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="Enter your name" 
                   className="w-full p-2 pl-4 mb-3 bg-gray-200 rounded-full"
                 />
                 <h6 className="ml-3  text-left font-bold">Password</h6>
                 <input
+                  id="PasswordHash"
+                  name="PasswordHash"
                   type="password"
-                  id="passwordInput"
-                  placeholder="Password"
+                  required
+                  value={PasswordHash}
+                  onChange={(e) => setPasswordHash(e.target.value)}
+                  placeholder="Enter password"
                   className="w-full p-2 pl-4 mb-3 bg-gray-200 rounded-full"
                 />
                 <div className="flex">
@@ -328,7 +398,7 @@ function Home() {
                   <p className="p-2 text-sm">Remember Me</p>
                 </div>
                 <button
-                  onClick={handleLogin}
+                  onClick={handleSubmit}
                   className="w-full p-2 mt-3 bg-gray-600 text-white rounded-full"
                 >
                   Log In

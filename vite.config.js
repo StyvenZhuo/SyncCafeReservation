@@ -51,7 +51,7 @@ export default defineConfig({
                 target: 'https://localhost:7097',
                 secure: false
             },
-            '^/cafes': {
+            '^/api/LoginUser/register': {
                 target: 'https://localhost:7097',
                 secure: false
             },
