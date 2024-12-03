@@ -6,7 +6,8 @@ import careCafe from "../assets/Care_Home.jpg";
 import forestCafe from "../assets/Forest_Home.png";
 import livinCafe from "../assets/Livin_Home.png";
 import ReservationRecord from "./popup";
-import Reservasi from './Reservasi';
+import Reservasi from '../components/Reservasi';
+import { useNavigate } from "react-router-dom";
 
 function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -17,6 +18,7 @@ function Home() {
   const [Id, setId] = useState();
   const [Email, setEmail] = useState();
   const [PasswordHash, setPasswordHash] = useState();
+  const navigate = useNavigate();
 
   const reservations = [
     {
@@ -86,7 +88,7 @@ function Home() {
     // Handle sign-up logic here (e.g., save user data to database)
     console.log("Signed up with:", UsernameInput, EmailInput, PasswordHashInput);
 
-    setUserName(UsernameInput);
+    setUsername(UsernameInput);
     setIsLoggedIn(true);
     setShowLoginPopup(false);
   };
@@ -95,8 +97,25 @@ function Home() {
 
 
   const handleLogout = () => {
-    setIsLoggedIn(false);
-    setUserName("Guest");
+    fetch("/api/Login/logout", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: "",
+    })
+      .then((data) => {
+        if (data.ok) {
+          setIsLoggedIn(false);
+          navigate("/");
+        } else {
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
+    setUsername("Guest");
   };
 
   const toggleLoginPopup = () => {
@@ -111,15 +130,13 @@ function Home() {
   const handleSubmit = (e) => {
     e.preventDefault();
     // post data to the /register api
-    fetch("/api/LoginUser/authenticate", {
+    fetch("/api/Login/authenticate", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        Id: Id,
         Username: Username,
-        Email: Email,
         PasswordHash: PasswordHash,
       }),
     })
@@ -136,7 +153,7 @@ function Home() {
   const handleSubmitRegister = (e) => {
     e.preventDefault();
     // post data to the /register api
-    fetch("/api/LoginUser/register", {
+    fetch("/api/Register/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

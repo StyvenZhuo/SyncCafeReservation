@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate untuk navigasi
 
 // Import gambar dari folder assets
@@ -6,6 +6,7 @@ import HomeBg from '../assets/Home-bg.png';
 import careCafe from "../assets/Care_Home.jpg";
 import forestCafe from "../assets/Forest_Home.png";
 import livinCafe from "../assets/Livin_Home.png";
+import { UserContext } from './AuthorizeView';
 
 // Data cafe
 const cafes = [
@@ -54,6 +55,7 @@ function Reservasi({onClose}) {
   const [time, setTime] = useState('');
   const [seating, setSeating] = useState('Indoor');
   const [notes, setNotes] = useState('');
+  const user = useContext(UserContext)
 
   const navigate = useNavigate(); // Inisialisasi navigate untuk navigasi
 
@@ -92,7 +94,7 @@ function Reservasi({onClose}) {
                 <input
                   type="text"
                   placeholder="Name"
-                  value={name}
+                  value={user?.username}
                   onChange={(e) => setName(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md"
                   required

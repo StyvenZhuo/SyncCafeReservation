@@ -47,16 +47,24 @@ export default defineConfig({
                 target: 'https://localhost:7097',
                 secure: false
             },
-            '^/api/LoginUser/authenticate': {
-                target: 'https://localhost:7097',
+            '^/api/Register/register': {
+                target: 'https://localhost:7102',
                 secure: false
             },
-            '^/api/LoginUser/register': {
-                target: 'https://localhost:7097',
+            '^/api/Login/authenticate': {
+                target: 'https://localhost:7102',
                 secure: false
             },
             '^/reservations': {
-                target: 'https://localhost:7097',
+                target: 'https://localhost:7102',
+                secure: false
+            },
+            '^/api/Login/test': {
+                target: 'https://localhost:7102',
+                secure: false
+            },
+            '^/api/Login/logout': {
+                target: 'https://localhost:7102',
                 secure: false
             },
         },

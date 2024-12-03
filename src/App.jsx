@@ -1,9 +1,10 @@
 import './App.css'
 import Popup from './views/popup'
-import Home from './views/Home'
-import Reservasi from './views/Reservasi'
+import Reservasi from './components/Reservasi'
 import Admin from './admin/admin'
 import { Routes, Route } from 'react-router-dom';
+import Home from './views/Home';
+import ReservasiPage from './views/ReservasiPage';
 
 
 
@@ -13,7 +14,7 @@ function App() {
     <>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/reservasi" element={<Reservasi />} />
+        <Route path="/reservasi" element={<ReservasiPage />} />
         <Route path="/popup" element={<Popup />} />
         <Route path="/admin/*" element={<Admin />} />
       </Routes>
