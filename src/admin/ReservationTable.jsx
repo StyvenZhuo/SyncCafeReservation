@@ -1,24 +1,82 @@
-import React, { useState } from 'react';
-import { FaEdit, FaTrashAlt } from 'react-icons/fa'; 
-import ConfirmationModal from './ConfirmationModal';
+import React, { useState, useEffect } from "react";
+import { FaEdit, FaTrashAlt } from "react-icons/fa";
+import ConfirmationModal from "./ConfirmationModal";
 
 function ReservationTable() {
-  const [reservations, setReservations] = useState([
-    { id: 1, cafe: 'Forest', name: 'Cristine Pintar', date: '2024-11-25', time: '18:00', pax: '2', seating: 'Indoor', notes: 'ini harusny text panjanggggggg biar bisa ngok see more see less' },
-    { id: 2, cafe: 'Camba', name: 'Fifa emezing', date: '2024-11-26', time: '19:00', pax: '4', seating: 'Outdoor', notes: 'babii' },
-    { id: 3, cafe: 'Forest', name: 'Derik Si Playboy', date: '2024-11-26', time: '19:00', pax: '6', seating: 'Outdoor', notes: 'derik playboyyyy' },
-    { id: 4, cafe: 'Forest', name: 'Tipen keren', date: '2024-11-22', time: '12:00', pax: '3', seating: 'Indoor', notes: 'ini harusny text panjanggggggg biar bisa ngok see more see less' },
-    { id: 5, cafe: 'Archalley', name: 'Elen gacor', date: '2024-11-14', time: '20:00', pax: '4', seating: 'Outdoor', notes: 'babii' },
-    { id: 6, cafe: 'Archalley', name: 'jen uwaw', date: '2024-11-30', time: '19:00', pax: '6', seating: 'Outdoor', notes: 'derik playboyyyy' },
-  ]);
-
+  const [reservations, setReservations] = useState([]);
   const [editing, setEditing] = useState(null);
-  const [originalReservations, setOriginalReservations] = useState([...reservations]);
+  const [originalReservations, setOriginalReservations] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [currentEdit, setCurrentEdit] = useState({});
-  const [expandedNotes, setExpandedNotes] = useState({}); 
+  const [expandedNotes, setExpandedNotes] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
+
+  const API_BASE_URL = "https://localhost:7102/api/Reservations";
+
+  useEffect(() => {
+    fetchReservations();
+  }, []);
+
+  const fetchReservations = async () => {
+    try {
+      const response = await fetch(API_BASE_URL);
+      if (!response.ok) throw new Error("Failed to fetch");
+      const data = await response.json();
+      setReservations(data);
+      setOriginalReservations(data);
+    } catch (error) {
+      console.error("Error fetching reservations:", error);
+    }
+  };
+
+  const handleCreate = async (newReservation) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/Reservation`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newReservation),
+      });
+      if (!response.ok) throw new Error("Failed to create");
+      fetchReservations();
+    } catch (error) {
+      console.error("Error creating reservation:", error);
+    }
+  };
+
+  const handleConfirmSave = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/${editing}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id: editing, ...currentEdit[editing] }),
+      });
+      if (!response.ok) throw new Error("Failed to update");
+
+      setEditing(null);
+      setModalOpen(false);
+      setCurrentEdit({});
+      fetchReservations();
+    } catch (error) {
+      console.error("Error updating reservation:", error);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/${id}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) throw new Error("Failed to delete");
+      fetchReservations();
+    } catch (error) {
+      console.error("Error deleting reservation:", error);
+    }
+  };
 
   const totalPages = Math.ceil(reservations.length / itemsPerPage);
   const paginatedData = reservations.slice(
@@ -33,7 +91,9 @@ function ReservationTable() {
   const goToPreviousPage = () => {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
   };
-  
+
+  const goToPage = (page) => setCurrentPage(page);
+
   const handleInputChange = (e, res, field) => {
     const value = e.target.value;
     setCurrentEdit({
@@ -46,18 +106,6 @@ function ReservationTable() {
     setModalOpen(true);
   };
 
-  const handleConfirmSave = () => {
-    setReservations((prev) =>
-      prev.map((res) =>
-        res.id === editing ? { ...res, ...currentEdit[editing] } : res
-      )
-    );
-    setEditing(null);
-    setModalOpen(false);
-    setOriginalReservations([...reservations]);
-    setCurrentEdit({});
-  };
-
   const toggleNotes = (id) => {
     setExpandedNotes((prev) => ({
       ...prev,
@@ -65,19 +113,13 @@ function ReservationTable() {
     }));
   };
 
-  const handleDelete = (id) => {
-    setReservations((prev) => prev.filter((res) => res.id !== id));
-  };
-
-  const goToPage = (page) => setCurrentPage(page);
-
   const handleEditClick = (id) => {
-    setOriginalReservations([...reservations]); 
+    setOriginalReservations([...reservations]);
     setEditing(id);
   };
 
   const handleCancelEdit = () => {
-    setReservations([...originalReservations]); 
+    setReservations([...originalReservations]);
     setEditing(null);
     setModalOpen(false);
     setCurrentEdit({});
@@ -85,124 +127,66 @@ function ReservationTable() {
 
   return (
     <div className="space-y-4 relative">
-      <h1 className="sm:text-lg xl:text-2xl font-bold sticky top-0  z-10 p-4">Reservations</h1>
+      <h1 className="sm:text-lg xl:text-2xl font-bold sticky top-0 z-10 p-4">
+        Reservations
+      </h1>
 
-      {/* Responsive Table */}
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white table-fixed text-sm xl:text-base">
           <thead>
             <tr>
-              <th className="p-2 xl:p-4 w-1/8">Reserve No</th>
-              <th className="p-2 xl:p-4 w-1/8">Cafe</th>
-              <th className="p-2 xl:p-4 w-1/8">Guest Name</th>
-              <th className="p-2 xl:p-4 w-1/8">Time & Date</th>
-              <th className="p-2 xl:p-4 w-1/8">Pax</th>
-              <th className="p-2 xl:p-4 w-1/8">Seating</th>
-              <th className="p-2 xl:p-4 w-1/8">Notes</th>
-              <th className="p-2 xl:p-4 w-1/8">Actions</th>
+              {[
+                "Id",
+                "UsersId",
+                "Username",
+                "CafeId",
+                "ReservationDate",
+                "StartTime",
+                "NumberOfGuests",
+                "Status",
+                "Notes",
+                "CreatedAt",
+                "UpdatedAt",
+                "Actions",
+              ].map((header) => (
+                <th key={header} className="p-2 xl:p-4 w-1/12">
+                  {header}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>
             {paginatedData.map((res, index) => (
               <tr
                 key={res.id}
-                className={index % 2 === 0 ? 'bg-indigo-200' : 'bg-white'}
+                className={index % 2 === 0 ? "bg-indigo-200" : "bg-white"}
               >
-                <td className="p-2 xl:p-4">{res.id}</td>
-                <td className="p-2 xl:p-4">
-                  {editing === res.id ? (
-                    <input
-                      type="text"
-                      className="p-1"
-                      defaultValue={res.cafe}
-                      onChange={(e) => handleInputChange(e, res, 'cafe')}
-                    />
-                  ) : (
-                    res.cafe
-                  )}
-                </td>
-                <td className="p-2 xl:p-4">
-                  {editing === res.id ? (
-                    <input
-                      type="text"
-                      className="p-1"
-                      defaultValue={res.name}
-                      onChange={(e) => handleInputChange(e, res, 'name')}
-                    />
-                  ) : (
-                    res.name
-                  )}
-                </td>
-                <td className="p-2 xl:p-4">
-                  {editing === res.id ? (
-                    <>
+                {[
+                  "id",
+                  "usersId",
+                  "username",
+                  "cafeId",
+                  "reservationDate",
+                  "startTime",
+                  "numberOfGuests",
+                  "status",
+                  "notes",
+                  "createdAt",
+                  "updatedAt",
+                ].map((field) => (
+                  <td className="p-2 xl:p-4" key={field}>
+                    {editing === res.id && field !== "id" ? (
                       <input
-                        type="date"
+                        type="text"
                         className="p-1"
-                        defaultValue={res.date}
-                        onChange={(e) => handleInputChange(e, res, 'date')}
+                        defaultValue={res[field]}
+                        onChange={(e) => handleInputChange(e, res, field)}
                       />
-                      <input
-                        type="time"
-                        className="p-1"
-                        defaultValue={res.time}
-                        onChange={(e) => handleInputChange(e, res, 'time')}
-                      />
-                    </>
-                  ) : (
-                    `${res.date} ${res.time}`
-                  )}
-                </td>
-                <td className="p-2 xl:p-4">
-                  {editing === res.id ? (
-                    <input
-                      type="text"
-                      className="p-1"
-                      defaultValue={res.pax}
-                      onChange={(e) => handleInputChange(e, res, 'pax')}
-                    />
-                  ) : (
-                    res.pax
-                  )}
-                </td>
-                <td className="p-2 xl:p-4">
-                  {editing === res.id ? (
-                    <input
-                      type="text"
-                      className="p-1"
-                      defaultValue={res.seating}
-                      onChange={(e) => handleInputChange(e, res, 'seating')}
-                    />
-                  ) : (
-                    res.seating
-                  )}
-                </td>
-                <td className="p-2 xl:p-4">
-                  {editing === res.id ? (
-                    <input
-                      type="text"
-                      className="p-1"
-                      defaultValue={res.notes}
-                      onChange={(e) => handleInputChange(e, res, 'notes')}
-                    />
-                  ) : (
-                    <div className="max-w-[200px] h-auto overflow-hidden justify-center">
-                      {expandedNotes[res.id] ? (
-                        <span>{res.notes}</span>
-                      ) : (
-                        <span>{res.notes.slice(0, 50)}...</span>
-                      )}
-                      {res.notes.length > 50 && (
-                        <button
-                          className="text-blue-500 ml-2"
-                          onClick={() => toggleNotes(res.id)}
-                        >
-                          {expandedNotes[res.id] ? 'See Less' : 'See More'}
-                        </button>
-                      )}
-                    </div>
-                  )}
-                </td>
+                    ) : (
+                      res[field]
+                    )}
+                  </td>
+                ))}
                 <td className="p-2 xl:p-4 flex space-x-2">
                   {editing === res.id ? (
                     <button
@@ -247,7 +231,7 @@ function ReservationTable() {
             key={i}
             onClick={() => goToPage(i + 1)}
             className={`px-3 py-1 rounded-lg ${
-              currentPage === i + 1 ? 'bg-indigo-500 text-white' : 'bg-gray-200'
+              currentPage === i + 1 ? "bg-indigo-500 text-white" : "bg-gray-200"
             }`}
           >
             {i + 1}
@@ -261,8 +245,6 @@ function ReservationTable() {
           Next
         </button>
       </div>
-
-
 
       {modalOpen && (
         <ConfirmationModal

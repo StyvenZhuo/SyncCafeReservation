@@ -2,8 +2,8 @@
   text-align: center;
 }
 
-body{
-  font-family: 'Poppins';
+body {
+  font-family: "Poppins";
 }
 
 .logo {
@@ -40,4 +40,206 @@ body{
 
 .read-the-docs {
   color: #888;
+}
+
+/* CSS untuk loading cube dengan efek blur pada background */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  perspective: 800px; /* Menambahkan perspektif untuk efek 3D */
+  background-color: rgba(
+    0,
+    0,
+    0,
+    0.5
+  ); /* Warna latar belakang semi-transparan */
+  backdrop-filter: blur(10px); /* Efek blur pada latar belakang */
+}
+
+.cube {
+  width: 100px;
+  height: 100px;
+  position: relative;
+  transform-style: preserve-3d;
+}
+
+.face {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  background-color: #3498db;
+  border: 5px solid #fff;
+  opacity: 0.9;
+}
+
+.face.front {
+  transform: translateZ(50px);
+  background-color: #3498db;
+}
+
+.face.back {
+  transform: rotateY(180deg) translateZ(50px);
+  background-color: #e74c3c;
+}
+
+.face.left {
+  transform: rotateY(-90deg) translateZ(50px);
+  background-color: #2ecc71;
+}
+
+.face.right {
+  transform: rotateY(90deg) translateZ(50px);
+  background-color: #f39c12;
+}
+
+.face.top {
+  transform: rotateX(90deg) translateZ(50px);
+  background-color: #9b59b6;
+}
+
+.face.bottom {
+  transform: rotateX(-90deg) translateZ(50px);
+  background-color: #1abc9c;
+}
+
+/*.bg-fade-in*/
+@keyframes fadeInBg {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.bg-fade-in {
+  animation: fadeInBg 2s ease-in-out;
+}
+
+/*User Info*/
+@keyframes slideUpFade {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.user-info {
+  animation: slideUpFade 1s ease-out;
+}
+
+/*Reserve Button*/
+@keyframes hoverEffect {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.05);
+  }
+}
+
+.reserve-btn:hover {
+  animation: hoverEffect 0.3s ease-in-out;
+}
+
+/*Card Animate*/
+@keyframes fadeInCard {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card-animate {
+  animation: fadeInCard 0.5s ease-out;
+}
+
+/*Login/Sign up Popup*/
+@keyframes fadeInModal {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.modal-fade-in {
+  animation: fadeInModal 0.5s ease-in-out;
+}
+
+/* Smooth scroll for reservation list */
+.smooth-scroll {
+  scroll-behavior: smooth;
+}
+
+/*Please log in to view your reservation*/
+@keyframes shake {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-10px);
+  }
+  50% {
+    transform: translateX(10px);
+  }
+  75% {
+    transform: translateX(-10px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.animate-shake {
+  animation: shake 1s ease-in-out infinite;
+}
+
+/*Cursor X*/
+.disabled-input {
+  cursor: not-allowed; /* Default cursor untuk elemen non-interaktif */
+}
+
+.disabled-input:hover {
+  cursor: url("/x-cursor.png"), not-allowed; /* Kursor kustom dengan fallback */
+}
+
+/*PopUp Reservation Validate*/
+@keyframes popup {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-popup {
+  animation: popup 0.3s ease-out;
+}
+
+/*Card Animation*/
+.card-animate {
+  transition: transform 0.3s ease;
+}
+
+.card-animate:hover {
+  transform: translateY(-5px);
+}
+
+.animate-shake {
+  animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
 }

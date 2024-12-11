@@ -1,5 +1,7 @@
 import React, { useState, useEffect, createContext } from "react";
 import { Navigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import Typewriter from "typewriter-effect";
 
 export const UserContext = createContext({});
 
@@ -12,7 +14,7 @@ function AuthorizeView(props) {
   useEffect(() => {
     let retryCount = 0;
     let maxRetries = 3;
-    let delay = 1000;
+    let delay = 1500;
 
     function wait(delay) {
       return new Promise((resolve) => setTimeout(resolve, delay));
@@ -28,7 +30,7 @@ function AuthorizeView(props) {
           setUser({ email: j.email, username: j.username });
           setAuthorized(true);
           return response;
-        } else if (response.Result = false) {
+        } else if ((response.Result = false)) {
           console.log("Unauthorized");
           return response;
         } else {
@@ -59,8 +61,37 @@ function AuthorizeView(props) {
   if (loading) {
     return (
       <>
-        <p>Loading....
-        </p>
+        <div className="loading-container flex flex-col items-center justify-center min-h-screen disabled-input">
+          <motion.div
+            className="cube"
+            animate={{
+              rotateX: [0, 180, 0],
+              rotateY: [0, 180, 0],
+              scale: [1, 1.2, 1],
+            }}
+            transition={{
+              repeat: Infinity,
+              duration: 2,
+              ease: "easeInOut",
+            }}
+          >
+            <div className="face front"></div>
+            <div className="face back"></div>
+            <div className="face left"></div>
+            <div className="face right"></div>
+            <div className="face top"></div>
+            <div className="face bottom"></div>
+          </motion.div>
+          <div className="mt-28 text-center text-gray-700 text-xl font-bold">
+            <Typewriter
+              options={{
+                strings: ["Please Login First..."],
+                autoStart: true,
+                loop: false,
+              }}
+            />
+          </div>
+        </div>
       </>
     );
   } else {

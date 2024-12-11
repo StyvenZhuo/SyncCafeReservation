@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import homeBg from "../assets/Home-bg.png";
 import pfp from "../assets/PFP.png";
 import history from "../assets/button-history.png";
@@ -6,24 +6,41 @@ import careCafe from "../assets/Care_Home.jpg";
 import forestCafe from "../assets/Forest_Home.png";
 import livinCafe from "../assets/Livin_Home.png";
 import ReservationRecord from "./popup";
-import Reservasi from '../components/Reservasi';
+import Reservasi from "../components/Reservasi";
 import { useNavigate } from "react-router-dom";
+import Typewriter from "typewriter-effect";
 
 function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [Username, setUsername] = useState();
+  const [Username, setUsername] = useState(null);
   const [showLoginPopup, setShowLoginPopup] = useState(false);
-  const [isSignUp, setIsSignUp] = useState(false); 
+  const [isSignUp, setIsSignUp] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [Id, setId] = useState();
   const [Email, setEmail] = useState();
   const [PasswordHash, setPasswordHash] = useState();
+  const [user, setUser] = useState(null);
+  const [RememberMe, setRememberMe] = useState();
   const navigate = useNavigate();
 
   const reservations = [
     {
+      name: "Camba Cafe",
+      location: "City here, block there, road here, building 010A-26",
+      datetime: {
+        Date: "2024-12-24",
+        Time: "10:00 - 22:00",
+      },
+      guestInfo: {
+        reserver: "Halsin",
+        pax: 3,
+      },
+      status: "Available",
+      imageSrc: homeBg,
+    },
+    {
       name: "Care Cafe",
-      location: "City here, block there, road here, building there",
+      location: "City here, block there, road here, building 21A-05",
       datetime: {
         Date: "2023-12-31",
         Time: "17:00",
@@ -32,12 +49,12 @@ function Home() {
         reserver: "Halsin",
         pax: 3,
       },
-      status: "Confirmed",
+      status: "Available",
       imageSrc: careCafe,
     },
     {
       name: "Livin' Cafe",
-      location: "City here, block there, road here, building there",
+      location: "City here, block there, road here, building 07E-16",
       datetime: {
         Date: "2023-12-31",
         Time: "17:00",
@@ -46,12 +63,12 @@ function Home() {
         reserver: "Halsin",
         pax: 3,
       },
-      status: "Pending",
+      status: "Available",
       imageSrc: livinCafe,
     },
     {
       name: "Forest Cafe",
-      location: "City here, block there, road here, building there",
+      location: "City here, block there, road here, building 03C-12",
       datetime: {
         Date: "2023-12-31",
         Time: "17:00",
@@ -60,12 +77,63 @@ function Home() {
         reserver: "Halsin",
         pax: 3,
       },
-      status: "Cancelled",
+      status: "Not Available",
       imageSrc: forestCafe,
     },
   ];
-  
-  
+
+  function handleFetchWithRetry() {
+    let retryCount = 0;
+    const maxRetries = 3;
+    const delay = 1000;
+
+    function wait(delay) {
+      return new Promise((resolve) => setTimeout(resolve, delay));
+    }
+
+    async function fetchWithRetry(url, options) {
+      try {
+        const response = await fetch(url, options);
+
+        if (response.status === 200) {
+          console.log("Authorized");
+          const j = await response.json();
+          setUser({ email: j.email, username: j.username, id: j.id });
+          setIsLoggedIn(true);
+          return response;
+        } else if (response.Result === false) {
+          console.log("Unauthorized");
+          return response;
+        } else {
+          throw new Error("" + response.status);
+        }
+      } catch (error) {
+        retryCount++;
+        if (retryCount > maxRetries) {
+          throw error;
+        } else {
+          await wait(delay);
+          return fetchWithRetry(url, options);
+        }
+      }
+    }
+
+    fetchWithRetry("/api/Login/test", {
+      method: "GET",
+    })
+      .catch((error) => {
+        console.log(error.message);
+      })
+      .finally(() => {
+        setLoading(false);
+        // Recalling the function after completion
+        handleFetchWithRetry();
+      });
+  }
+
+  useEffect(() => {
+    handleFetchWithRetry();
+  }, []);
 
   const [showReservationModal, setShowReservationModal] = useState(false);
 
@@ -81,21 +149,6 @@ function Home() {
     setShowModal(false);
   };
 
-  const handleSignUp = () => {
-    const UsernameInput = document.getElementById("signUpUserNameInput").value;
-    const PasswordHashInput = document.getElementById("signUpPasswordHashInput").value;
-    const EmailInput = document.getElementById("signUpEmailInput").value;
-    // Handle sign-up logic here (e.g., save user data to database)
-    console.log("Signed up with:", UsernameInput, EmailInput, PasswordHashInput);
-
-    setUsername(UsernameInput);
-    setIsLoggedIn(true);
-    setShowLoginPopup(false);
-  };
-
-
-
-
   const handleLogout = () => {
     fetch("/api/Login/logout", {
       method: "POST",
@@ -107,13 +160,14 @@ function Home() {
       .then((data) => {
         if (data.ok) {
           setIsLoggedIn(false);
+          setUser(null);
           navigate("/");
         } else {
         }
       })
       .catch((error) => {
         console.error(error);
-      });
+      });
 
     setUsername("Guest");
   };
@@ -138,17 +192,19 @@ function Home() {
       body: JSON.stringify({
         Username: Username,
         PasswordHash: PasswordHash,
+        RememberMe: RememberMe,
       }),
     })
- 
       .then((data) => {
         console.log(data);
-        if (data.ok) setIsLoggedIn(true), toggleLoginPopup();})
+        if (data.ok)
+          setIsLoggedIn(true), toggleLoginPopup(), handleFetchWithRetry();
+      })
       .catch((error) => {
         // handle network error
         console.error(error);
       });
-  }
+  };
 
   const handleSubmitRegister = (e) => {
     e.preventDefault();
@@ -165,16 +221,15 @@ function Home() {
         PasswordHash: PasswordHash,
       }),
     })
- 
       .then((data) => {
         console.log(data);
-        if (data.ok) setIsLoggedIn(true), toggleLoginPopup();})
+        if (data.ok) setIsLoggedIn(true), toggleLoginPopup();
+      })
       .catch((error) => {
         // handle network error
         console.error(error);
       });
-  }
-    
+  };
 
   return (
     <div className="relative font-xl min-h-screen flex justify-center bg-gray-800 ">
@@ -182,14 +237,13 @@ function Home() {
       <img
         src={homeBg}
         alt="Background"
-        className="absolute inset-0 w-full h-full object-cover bg-cover"
+        className="absolute inset-0 w-full h-full object-cover bg-cover bg-fade-in"
         style={{ filter: "brightness(0.45)" }}
       />
-
       {/* Overlay Container */}
       <div className="relative flex flex-col md:flex-row w-full md:p-8">
         {/* Left Side (User Info and Welcome Section) */}
-        <div className="flex-initial bg-opacity-90 p-6 rounded-lg shadow-ld w-full md:w-1/2">
+        <div className="flex-initial bg-opacity-90 p-6 rounded-lg shadow-ld w-full md:w-1/2 user-info">
           <div className="flex flex-row items-center">
             <div className="bg-white flex flex-col lg:flex-row items-center p-4 rounded-lg shadow-md mr-5">
               <div className="flex items-center mb-4 lg:mb-0 lg:mr-5">
@@ -203,7 +257,7 @@ function Home() {
                     Welcome,
                   </p>
                   <h1 className="text-2xl lg:text-3xl font-light">
-                    {isLoggedIn ? Username : "Guest"}
+                    {user?.username}
                   </h1>
                 </div>
               </div>
@@ -236,26 +290,29 @@ function Home() {
               }}
             >
               <p className="mr-6 text-4xl sm:text-5xl md:text-6xl lg:text-7xl">
-                <span className="font-light">Ready to </span>
-                <span className="italic font-medium">book?</span>
+                <Typewriter
+                  options={{
+                    strings: ["Ready To Book ?"],
+                    autoStart: true,
+                    loop: true,
+                  }}
+                />
               </p>
             </div>
             <button
               onClick={() => {
                 if (!isLoggedIn) {
-                  setShowLoginPopup(true);
+                  window.location.href = "./reservasi";
                 } else {
                   setShowModal(true);
                 }
               }}
-              className="text-2xl sm:text-3xl md:text-4xl font-light mt-4 px-6 py-3 bg-white rounded-full hover:bg-[#343434] transition duration-200"
+              className="text-2xl sm:text-3xl md:text-4xl font-light mt-4 px-6 py-3 bg-white rounded-full hover:bg-[#343434] reserve-btn transition duration-200"
             >
               Reserve Now
             </button>
           </div>
         </div>
-
-        
 
         {/* Right Side (Recent Reservations) */}
         <div className="ml-auto max-w-[500px] flex-initial p-6 rounded-lg shadow-lg overflow-auto sm:h-auto md:h-auto md:w-1/2 mt-8 sm:mt-4 md:mt-0 justify-between">
@@ -266,67 +323,96 @@ function Home() {
             Recent &nbsp; Reservations
           </h3>
 
-          <div className="overflow-auto pr-3 max-h-[573px] space-y-4 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300">
-          {isLoggedIn ? (reservations.length > 0 ? (
-          <div className="space-y-4">
-          {reservations.map((reservation, i) => (
-            <div key={i}
-            className="bg-white rounded-lg shadow-lg overflow-hidden">
-              <img
-                src={reservation.imageSrc}
-                alt={reservation.name}
-                className="w-full h-52 object-cover"
-              />
-              <div className="p-4">
-                <h4 className="text-2xl font-light text-gray-800">{reservation.name}</h4>
-                <p className="text-s font-medium text-gray-600 mb-4">{reservation.location}</p>
-                {/* Card Content */}
-                <div className="bg-[#E8E8E8] mx-auto px-4 py-6 rounded-lg shadow-md">
-                  <div className="flex justify-between mb-2">
-                    <p className="text-[#343434] font-semibold">Date/Time :</p>
-                    <p className="opacity-50 font-medium">{reservation.datetime.Date} &nbsp; | &nbsp;  {reservation.datetime.Time}</p>
-                  </div>
-                  <div className="flex justify-between mb-2">
-                    <p className="text-[#343434] font-semibold">Guest Info :</p> 
-                    <p className="opacity-50 font-medium">{reservation.guestInfo.reserver} &nbsp; | &nbsp; {reservation.guestInfo.pax} Pax</p>
-                  </div>
-                  <div className="flex justify-between">
-                    <p className="text-[#343434] font-semibold">Status :</p>
-                    <p className={`${
-                      reservation.status === "Confirmed"
-                        ? "text-green-600"
-                        : reservation.status === "Pending"
-                        ? "text-yellow-600"
-                        : "text-red-600"
-                    } font-medium`}>{reservation.status}</p>
-                  </div>
+          <div className="overflow-auto pr-3 max-h-[573px] space-y-4 smooth-scroll [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300">
+            {isLoggedIn ? (
+              reservations.length > 0 ? (
+                <div className="space-y-4">
+                  {reservations.map((reservation, i) => (
+                    <div
+                      key={i}
+                      className="bg-white rounded-lg shadow-lg overflow-hidden card-animate"
+                    >
+                      <img
+                        src={reservation.imageSrc}
+                        alt={reservation.name}
+                        className="w-full h-52 object-cover"
+                      />
+                      <div className="p-4">
+                        <h4 className="text-2xl font-light text-gray-800">
+                          {reservation.name}
+                        </h4>
+                        <p className="text-s font-medium text-gray-600 mb-4">
+                          {reservation.location}
+                        </p>
+                        {/* Card Content */}
+                        <div className="bg-[#E8E8E8] mx-auto px-4 py-6 rounded-lg shadow-md">
+                          <div className="flex justify-between mb-2">
+                            <p className="text-[#343434] font-semibold">
+                              Date/Time :
+                            </p>
+                            <p className="opacity-50 font-medium">
+                              {reservation.datetime.Date} &nbsp; | &nbsp;{" "}
+                              {reservation.datetime.Time}
+                            </p>
+                          </div>
+                          <div className="flex justify-between mb-2">
+                            <p className="text-[#343434] font-semibold">
+                              Guest Info :
+                            </p>
+                            <p className="opacity-50 font-medium">
+                              {reservation.guestInfo.reserver} &nbsp; | &nbsp;{" "}
+                              {reservation.guestInfo.pax} Pax
+                            </p>
+                          </div>
+                          <div className="flex justify-between">
+                            <p className="text-[#343434] font-semibold">
+                              Status :
+                            </p>
+                            <p
+                              className={`${
+                                reservation.status === "Available"
+                                  ? "text-green-600"
+                                  : reservation.status === "Pending"
+                                  ? "text-yellow-600"
+                                  : "text-red-600"
+                              } font-medium`}
+                            >
+                              {reservation.status}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
+              ) : (
+                <div className="bg-white rounded-lg shadow-lg p-4">
+                  <p className="text-gray-800">
+                    You haven't made any reservations.
+                  </p>
+                </div>
+              )
+            ) : (
+              <div className="bg-white rounded-lg shadow-lg p-4">
+                <p className="text-gray-800 font-bold animate-shake">
+                  Please log in to view your reservation.
+                </p>
               </div>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div className="bg-white rounded-lg shadow-lg p-4">
-          <p className="text-gray-800">You haven't made any reservations.</p>
-        </div>
-      )
-    ) : (
-      <div className="bg-white rounded-lg shadow-lg p-4">
-        <p className="text-gray-800">Please log in to view your reservation.</p>
-      </div>
-    )}
-  </div>
+            )}
+          </div>
         </div>
       </div>
-
-      {/* Login/Sign-Up Popup */}
+      {/* Login/Sign-Up Popup */} {/* Registrasi */}
       {showLoginPopup && (
-        <div className="fixed inset-0 z-50 flex justify-center items-center bg-black bg-opacity-50" onClick={(e) => {
-          // Close the modal only if the user clicks outside the modal content
-          if (e.target === e.currentTarget) {
-            setShowLoginPopup(false);
-          }
-        }} >
+        <div
+          className="fixed inset-0 z-50 flex justify-center items-center bg-black bg-opacity-50 modal-fade-in"
+          onClick={(e) => {
+            // Close the modal only if the user clicks outside the modal content
+            if (e.target === e.currentTarget) {
+              setShowLoginPopup(false);
+            }
+          }}
+        >
           <div className="bg-white p-8 rounded-xl shadow-xl w-full sm:w-96 md:w-[500px]">
             <h2 className="text-2xl font-semibold mb-4">
               {isSignUp ? "Sign Up" : "Log In"}
@@ -341,7 +427,7 @@ function Home() {
                   required
                   value={Username}
                   onChange={(e) => setUsername(e.target.value)}
-                  placeholder="Enter your name" 
+                  placeholder="Enter your name"
                   className="w-full p-2 pl-4 mb-3 bg-gray-200 rounded-full"
                 />
                 <h6 className="ml-3  text-left font-bold">Email</h6>
@@ -384,9 +470,8 @@ function Home() {
                   </p>
                 </div>
               </div>
-
             ) : (
-
+              /* Login */
               <div>
                 <h6 className="ml-3  text-left font-bold">Username</h6>
                 <input
@@ -394,9 +479,8 @@ function Home() {
                   name="Username"
                   type="text"
                   required
-                  value={Username}
                   onChange={(e) => setUsername(e.target.value)}
-                  placeholder="Enter your name" 
+                  placeholder="Enter your name"
                   className="w-full p-2 pl-4 mb-3 bg-gray-200 rounded-full"
                 />
                 <h6 className="ml-3  text-left font-bold">Password</h6>
@@ -405,13 +489,18 @@ function Home() {
                   name="PasswordHash"
                   type="password"
                   required
-                  value={PasswordHash}
                   onChange={(e) => setPasswordHash(e.target.value)}
                   placeholder="Enter password"
                   className="w-full p-2 pl-4 mb-3 bg-gray-200 rounded-full"
                 />
                 <div className="flex">
-                  <input type="checkbox" id="checkbox" className="ml-2" />
+                  <input
+                    type="checkbox"
+                    id="checkbox"
+                    required
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                    className="ml-2"
+                  />
                   <p className="p-2 text-sm">Remember Me</p>
                 </div>
                 <button
@@ -436,12 +525,15 @@ function Home() {
           </div>
         </div>
       )}
-
       {showModal && (
-          <Reservasi onClose={handleCloseModal} />
+        <Reservasi
+          onClose={handleCloseModal}
+          username={user?.username}
+          id={user.id}
+        />
       )}
     </div>
   );
 }
 
-export default Home;
+export default Home;
