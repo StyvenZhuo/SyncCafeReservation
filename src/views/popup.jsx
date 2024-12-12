@@ -48,7 +48,7 @@ const reservations = [
   },
 ];
 
-function Reservasi({ onClose, username, id }) {}
+function Reservasi({ username }) {}
 
 const ReservationRecord = ({ onClose }) => {
   return (
