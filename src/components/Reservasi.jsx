@@ -94,6 +94,7 @@ function Reservasi({ onClose, username, id }) {
         setIsPopupVisible(true);
         setTimeout(() => {
           onClose(true); // Fungsi ini bisa digunakan untuk kembali ke homepage
+          window.location.reload();
         }, 2000); // 2000 ms = 2 detik
       } else {
         setPopupMessage("Reservation Failed. Please try again.");

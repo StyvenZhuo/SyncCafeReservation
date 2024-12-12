@@ -241,7 +241,7 @@ function Home() {
                   <p className="text-sm text-gray-500 font-semibold ">
                     Welcome,
                   </p>
-                  <h1 className="text-2xl lg:text-3xl font-light">
+                  <h1 className="text-2xl lg:text-3xl font-light capitalize">
                     {user?.username}
                   </h1>
                 </div>
@@ -302,7 +302,7 @@ function Home() {
         {/* Right Side (Recent Reservations) */}
         <div className="ml-auto max-w-[500px] flex-initial p-6 rounded-lg shadow-lg overflow-auto sm:h-auto md:h-auto md:w-1/2 mt-8 sm:mt-4 md:mt-0 justify-between">
           <h3
-            className="text-white text-2xl font-medium mb-3"
+            className="text-white text-2xl font-medium mb-3 animate-shake"
             style={{ textShadow: "2px 2px 4px rgba(0, 0, 0, 0.6)" }}
           >
             Recent &nbsp; Reservations
@@ -323,7 +323,12 @@ function Home() {
                         className="w-full h-52 object-cover"
                       />
                       <div className="p-4">
-                        <h4 className="text-2xl font-light text-gray-800">
+                        <h4
+                          className="text-2xl font-light text-gray-900 animate-shake"
+                          style={{
+                            textShadow: "2px 2px 7px rgba(0, 0, 0, 0.9)",
+                          }}
+                        >
                           {cafeName[reservation.cafeId]}
                         </h4>
                         <p className="text-s font-medium text-gray-600 mb-4">
@@ -344,7 +349,7 @@ function Home() {
                             <p className="text-[#343434] font-semibold">
                               Guest Info :
                             </p>
-                            <p className="opacity-50 font-medium">
+                            <p className="opacity-50 font-medium capitalize">
                               {reservation.username} &nbsp; | &nbsp;{" "}
                               {reservation.numberOfGuests} Pax
                             </p>
@@ -356,7 +361,7 @@ function Home() {
                             <p
                               className={`${
                                 reservation.status === "Available"
-                                  ? "text-green-600"
+                                  ? "text-green-600 animate-shake"
                                   : reservation.status === "Pending"
                                   ? "text-yellow-600"
                                   : "text-red-600"
