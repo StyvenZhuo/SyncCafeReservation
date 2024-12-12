@@ -1,8 +1,8 @@
-import React from 'react';
-import CareCafe from '../assets/Care Cafe.png';
-import LivinCafe from '../assets/Livin Cafe.png';
-import ForestCafe from '../assets/Forest Cafe.png';
-import CambaCafe from '../assets/Home-bg.png';
+import React from "react";
+import CareCafe from "../assets/Care Cafe.png";
+import LivinCafe from "../assets/Livin Cafe.png";
+import ForestCafe from "../assets/Forest Cafe.png";
+import CambaCafe from "../assets/Home-bg.png";
 import { FaXmark } from "react-icons/fa6";
 
 const reservations = [
@@ -46,8 +46,9 @@ const reservations = [
     status: "Confirmed",
     image: CambaCafe,
   },
-  
 ];
+
+function Reservasi({ onClose, username, id }) {}
 
 const ReservationRecord = ({ onClose }) => {
   return (
@@ -63,7 +64,6 @@ const ReservationRecord = ({ onClose }) => {
             <FaXmark />
           </button>
         </div>
-
 
         {/* Reservation List with Scroll */}
         <div className="text-left p-4 overflow-auto max-h-[50vh] [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300">
@@ -91,16 +91,20 @@ const ReservationRecord = ({ onClose }) => {
                   <div className="flex flex-col">
                     <p className="font-semibold">Guest</p>
                   </div>
-                  <div className='flex flex-col'>
+                  <div className="flex flex-col">
                     <p className="font-semibold">Date / Time </p>
                   </div>
 
                   {/* Date/Time Info */}
                   <div className="flex flex-col">
-                    <p>{reservation.guest} | {reservation.pax} </p>
+                    <p>
+                      {reservation.guest} | {reservation.pax}{" "}
+                    </p>
                   </div>
-                  <div className='flex-flex-col'>
-                    <p>{reservation.date} | {reservation.time}</p>
+                  <div className="flex-flex-col">
+                    <p>
+                      {reservation.date} | {reservation.time}
+                    </p>
                   </div>
                 </div>
               </div>

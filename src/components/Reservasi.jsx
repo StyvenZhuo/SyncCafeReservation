@@ -91,17 +91,16 @@ function Reservasi({ onClose, username, id }) {
 
       if (response.ok) {
         setPopupMessage("Reservation Successful!");
+        setIsPopupVisible(true);
+        setTimeout(() => {
+          onClose(true); // Fungsi ini bisa digunakan untuk kembali ke homepage
+        }, 2000); // 2000 ms = 2 detik
       } else {
         setPopupMessage("Reservation Failed. Please try again.");
       }
     } catch (error) {
       setPopupMessage("An error occurred. Please try again.");
     }
-
-    setIsPopupVisible(true);
-
-    // Tutup popup setelah 3 detik
-    setTimeout(() => setIsPopupVisible(false), 3000);
   };
 
   return (

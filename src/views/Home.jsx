@@ -16,76 +16,63 @@ function Home() {
   const [showLoginPopup, setShowLoginPopup] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [Loading, setLoading] = useState();
   const [Id, setId] = useState();
   const [Email, setEmail] = useState();
   const [PasswordHash, setPasswordHash] = useState();
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState([]);
   const [RememberMe, setRememberMe] = useState();
+  const [reservations, setReservations] = useState([]);
   const navigate = useNavigate();
 
-  const reservations = [
-    {
-      name: "Camba Cafe",
-      location: "City here, block there, road here, building 010A-26",
-      datetime: {
-        Date: "2024-12-24",
-        Time: "10:00 - 22:00",
-      },
-      guestInfo: {
-        reserver: "Halsin",
-        pax: 3,
-      },
-      status: "Available",
-      imageSrc: homeBg,
-    },
-    {
-      name: "Care Cafe",
-      location: "City here, block there, road here, building 21A-05",
-      datetime: {
-        Date: "2023-12-31",
-        Time: "17:00",
-      },
-      guestInfo: {
-        reserver: "Halsin",
-        pax: 3,
-      },
-      status: "Available",
-      imageSrc: careCafe,
-    },
-    {
-      name: "Livin' Cafe",
-      location: "City here, block there, road here, building 07E-16",
-      datetime: {
-        Date: "2023-12-31",
-        Time: "17:00",
-      },
-      guestInfo: {
-        reserver: "Halsin",
-        pax: 3,
-      },
-      status: "Available",
-      imageSrc: livinCafe,
-    },
-    {
-      name: "Forest Cafe",
-      location: "City here, block there, road here, building 03C-12",
-      datetime: {
-        Date: "2023-12-31",
-        Time: "17:00",
-      },
-      guestInfo: {
-        reserver: "Halsin",
-        pax: 3,
-      },
-      status: "Not Available",
-      imageSrc: forestCafe,
-    },
-  ];
+  const cafeImageMap = {
+    1: homeBg,
+    2: careCafe,
+    3: livinCafe,
+    4: forestCafe,
+  };
+  const cafeName = {
+    1: "Camba Cafe",
+    2: "Care Cafe",
+    3: "Livin Cafe",
+    4: "Forest Cafe",
+  };
+  const fetchReservations = async () => {
+    try {
+      const response = await fetch(
+        `https://localhost:7102/api/Reservations/${user.id}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
+      if (!response.ok) throw new Error("Failed to fetch");
+
+      const data = await response.json();
+
+      const updatedReservations = data.map((reservation) => ({
+        ...reservation,
+        imageSrc: cafeImageMap[reservation.cafeId] || homeBg,
+      }));
+
+      setReservations(updatedReservations);
+    } catch (error) {
+      console.error("Error fetching reservations:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      fetchReservations();
+    }
+  }, [isLoggedIn]);
   function handleFetchWithRetry() {
     let retryCount = 0;
     const maxRetries = 3;
-    const delay = 1000;
+    const delay = 2000;
 
     function wait(delay) {
       return new Promise((resolve) => setTimeout(resolve, delay));
@@ -126,14 +113,12 @@ function Home() {
       })
       .finally(() => {
         setLoading(false);
-        // Recalling the function after completion
-        handleFetchWithRetry();
       });
   }
 
   useEffect(() => {
     handleFetchWithRetry();
-  }, []);
+  }, [isLoggedIn]);
 
   const [showReservationModal, setShowReservationModal] = useState(false);
 
@@ -333,13 +318,13 @@ function Home() {
                       className="bg-white rounded-lg shadow-lg overflow-hidden card-animate"
                     >
                       <img
-                        src={reservation.imageSrc}
-                        alt={reservation.name}
+                        src={cafeImageMap[reservation.cafeId]}
+                        alt={cafeName[reservation.cafeId]}
                         className="w-full h-52 object-cover"
                       />
                       <div className="p-4">
                         <h4 className="text-2xl font-light text-gray-800">
-                          {reservation.name}
+                          {cafeName[reservation.cafeId]}
                         </h4>
                         <p className="text-s font-medium text-gray-600 mb-4">
                           {reservation.location}
@@ -351,8 +336,8 @@ function Home() {
                               Date/Time :
                             </p>
                             <p className="opacity-50 font-medium">
-                              {reservation.datetime.Date} &nbsp; | &nbsp;{" "}
-                              {reservation.datetime.Time}
+                              {reservation.reservationDate} &nbsp; | &nbsp;{" "}
+                              {reservation.startTime}
                             </p>
                           </div>
                           <div className="flex justify-between mb-2">
@@ -360,8 +345,8 @@ function Home() {
                               Guest Info :
                             </p>
                             <p className="opacity-50 font-medium">
-                              {reservation.guestInfo.reserver} &nbsp; | &nbsp;{" "}
-                              {reservation.guestInfo.pax} Pax
+                              {reservation.username} &nbsp; | &nbsp;{" "}
+                              {reservation.numberOfGuests} Pax
                             </p>
                           </div>
                           <div className="flex justify-between">
