@@ -243,3 +243,80 @@ body {
 .animate-shake {
   animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
 }
+
+/* Login Popup Animations */
+@keyframes popup {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-4px);
+  }
+  75% {
+    transform: translateX(4px);
+  }
+}
+
+@keyframes timer {
+  0% {
+    width: 100%;
+  }
+  100% {
+    width: 0%;
+  }
+}
+
+/* Login Popup Classes */
+.animate-popup {
+  animation: popup 0.3s ease-out;
+}
+
+.animate-shakey {
+  animation: shake 0.5s ease-in-out infinite;
+}
+
+.animate-timer {
+  animation: timer 3s linear;
+}
+
+.backdrop-blur-sm {
+  backdrop-filter: blur(4px);
+}
+
+/* Optional: jika Anda ingin menambahkan custom background colors */
+.bg-overlay {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.login-popup {
+  max-width: 28rem;
+  width: 100%;
+  margin: 0 1rem;
+}
+
+.popup-icon {
+  width: 4rem;
+  height: 4rem;
+}
+
+.progress-bar {
+  height: 0.5rem;
+  border-radius: 9999px;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 9999px;
+}

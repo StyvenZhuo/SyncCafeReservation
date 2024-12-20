@@ -95,7 +95,7 @@ function Reservasi({ onClose, username, id }) {
         setTimeout(() => {
           onClose(true); // Fungsi ini bisa digunakan untuk kembali ke homepage
           window.location.reload();
-        }, 2000); // 2000 ms = 2 detik
+        }, 3000); // 2000 ms = 2 detik
       } else {
         setPopupMessage("Reservation Failed. Please try again.");
       }
@@ -207,6 +207,7 @@ function Reservasi({ onClose, username, id }) {
                   value={ReservationDate}
                   onChange={(e) => setReservationDate(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                  min={new Date().toISOString().split("T")[0]} // Atur tanggal minimum ke hari ini
                   required
                 />
               </label>
@@ -235,12 +236,39 @@ function Reservasi({ onClose, username, id }) {
 
             {isPopupVisible && (
               <div className="fixed inset-0 flex items-center justify-center z-50">
-                <div className="bg-black bg-opacity-50 fixed inset-0"></div>
-                <div
-                  className="bg-white rounded-lg shadow-lg px-6 py-4 text-center animate-popup"
-                  style={{ minWidth: "300px" }}
-                >
-                  <p className="text-lg font-semibold">{popupMessage}</p>
+                <div className="absolute inset-0 bg-overlay backdrop-blur-sm"></div>
+                <div className="login-popup bg-white rounded-xl p-6 shadow-2xl z-10 animate-popup">
+                  <div className="flex items-center space-x-4">
+                    <div className="flex-shrink-0">
+                      <div className="popup-icon rounded-full bg-green-100 flex items-center justify-center animate-bounce">
+                        <svg
+                          className="w-8 h-8 text-green-600"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M5 13l4 4L19 7"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                        Reservasi Berhasil!
+                      </h3>
+                      <p className="text-gray-600">
+                        Ditunggu kedatangannya! Anda akan dialihkan menuju
+                        home..
+                      </p>
+                    </div>
+                  </div>
+                  <div className="mt-6 progress-bar bg-gray-200">
+                    <div className="progress-bar-fill bg-green-600 animate-timer"></div>
+                  </div>
                 </div>
               </div>
             )}

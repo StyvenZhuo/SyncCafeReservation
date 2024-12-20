@@ -24,6 +24,11 @@ function Home() {
   const [RememberMe, setRememberMe] = useState();
   const [reservations, setReservations] = useState([]);
   const navigate = useNavigate();
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [showErrorPopup, setShowErrorPopup] = useState(false);
+  const [showRegisterSuccessPopup, setShowRegisterSuccessPopup] =
+    useState(false);
+  const [showRegsiterErrorPopup, setShowRegisterErrorPopup] = useState(false);
 
   const cafeImageMap = {
     1: homeBg,
@@ -37,19 +42,51 @@ function Home() {
     3: "Livin Cafe",
     4: "Forest Cafe",
   };
+
+  const handleLoginSuccess = () => {
+    setShowSuccessPopup(true);
+    setTimeout(() => {
+      setShowSuccessPopup(false);
+    }, 3000);
+  };
+
+  const handleLoginError = () => {
+    setShowErrorPopup(true);
+    setTimeout(() => {
+      setShowErrorPopup(false);
+    }, 3000);
+  };
+
+  const handleRegisterSuccess = () => {
+    setShowRegisterSuccessPopup(true);
+    setTimeout(() => {
+      setShowRegsiterSuccessPopup(false);
+    }, 3000);
+  };
+
+  const handleRegisterError = () => {
+    showRegsiterErrorPopup(true);
+    setTimeout(() => {
+      showRegsiterErrorPopup(false);
+    }, 3000);
+  };
+
   const fetchReservations = async () => {
     try {
-      const response = await fetch(
-        `https://localhost:7102/api/Reservations/${user.id}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const url = `/api/Reservations/UserId?userId=${user.id}`;
+      console.log(`Fetching from URL: ${url}`);
 
-      if (!response.ok) throw new Error("Failed to fetch");
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        console.error("Response status:", response.status, response.statusText);
+        throw new Error("Failed to fetch reservations");
+      }
 
       const data = await response.json();
 
@@ -182,12 +219,19 @@ function Home() {
     })
       .then((data) => {
         console.log(data);
-        if (data.ok)
-          setIsLoggedIn(true), toggleLoginPopup(), handleFetchWithRetry();
+        if (data.ok) {
+          setIsLoggedIn(true);
+          handleLoginSuccess();
+          setTimeout(() => {
+            window.location.reload();
+          }, 3000);
+        } else {
+          handleLoginError();
+        }
       })
       .catch((error) => {
-        // handle network error
         console.error(error);
+        handleLoginError();
       });
   };
 
@@ -208,11 +252,19 @@ function Home() {
     })
       .then((data) => {
         console.log(data);
-        if (data.ok) setIsLoggedIn(true), toggleLoginPopup();
+        if (data.ok) {
+          setIsLoggedIn(true);
+          handleRegisterSuccess();
+          setTimeout(() => {
+            window.location.reload();
+          }, 3000);
+        } else {
+          handleRegisterError();
+        }
       })
       .catch((error) => {
-        // handle network error
         console.error(error);
+        handleRegisterError();
       });
   };
 
@@ -459,6 +511,82 @@ function Home() {
                     </span>
                   </p>
                 </div>
+                {/* Success Popup */}
+                {showRegisterSuccessPopup && (
+                  <div className="fixed inset-0 flex items-center justify-center z-50">
+                    <div className="absolute inset-0 bg-overlay backdrop-blur-sm"></div>
+                    <div className="login-popup bg-white rounded-xl p-6 shadow-2xl z-10 animate-popup">
+                      <div className="flex items-center space-x-4">
+                        <div className="flex-shrink-0">
+                          <div className="popup-icon rounded-full bg-green-100 flex items-center justify-center animate-bounce">
+                            <svg
+                              className="w-8 h-8 text-green-600"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M5 13l4 4L19 7"
+                              />
+                            </svg>
+                          </div>
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                            Registrasi Berhasil!
+                          </h3>
+                          <p className="text-gray-600">
+                            Selamat datang! Anda harus login terlebih dahulu!
+                          </p>
+                        </div>
+                      </div>
+                      <div className="mt-6 progress-bar bg-gray-200">
+                        <div className="progress-bar-fill bg-green-600 animate-timer"></div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                {/* Error Popup */}
+                {showRegsiterErrorPopup && (
+                  <div className="fixed inset-0 flex items-center justify-center z-50">
+                    <div className="absolute inset-0 bg-overlay backdrop-blur-sm"></div>
+                    <div className="login-popup bg-white rounded-xl p-6 shadow-2xl z-10 animate-popup">
+                      <div className="flex items-center space-x-4">
+                        <div className="flex-shrink-0">
+                          <div className="popup-icon rounded-full bg-red-100 flex items-center justify-center animate-shakey">
+                            <svg
+                              className="w-8 h-8 text-red-600"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M6 18L18 6M6 6l12 12"
+                              />
+                            </svg>
+                          </div>
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                            Login Gagal!
+                          </h3>
+                          <p className="text-gray-600">
+                            Username atau password salah. Silakan coba lagi.
+                          </p>
+                        </div>
+                      </div>
+                      <div className="mt-6 progress-bar bg-gray-200">
+                        <div className="progress-bar-fill bg-red-600 animate-timer"></div>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             ) : (
               /* Login */
@@ -510,6 +638,83 @@ function Home() {
                     </span>
                   </p>
                 </div>
+                {showSuccessPopup && (
+                  <div className="fixed inset-0 flex items-center justify-center z-50">
+                    <div className="absolute inset-0 bg-overlay backdrop-blur-sm"></div>
+                    <div className="login-popup bg-white rounded-xl p-6 shadow-2xl z-10 animate-popup">
+                      <div className="flex items-center space-x-4">
+                        <div className="flex-shrink-0">
+                          <div className="popup-icon rounded-full bg-green-100 flex items-center justify-center animate-bounce">
+                            <svg
+                              className="w-8 h-8 text-green-600"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M5 13l4 4L19 7"
+                              />
+                            </svg>
+                          </div>
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                            Login Berhasil!
+                          </h3>
+                          <p className="text-gray-600">
+                            Selamat datang kembali! Anda akan dialihkan ke
+                            dashboard.
+                          </p>
+                        </div>
+                      </div>
+                      <div className="mt-6 progress-bar bg-gray-200">
+                        <div className="progress-bar-fill bg-green-600 animate-timer"></div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Error Popup */}
+                {showErrorPopup && (
+                  <div className="fixed inset-0 flex items-center justify-center z-50">
+                    <div className="absolute inset-0 bg-overlay backdrop-blur-sm"></div>
+                    <div className="login-popup bg-white rounded-xl p-6 shadow-2xl z-10 animate-popup">
+                      <div className="flex items-center space-x-4">
+                        <div className="flex-shrink-0">
+                          <div className="popup-icon rounded-full bg-red-100 flex items-center justify-center animate-shakey">
+                            <svg
+                              className="w-8 h-8 text-red-600"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M6 18L18 6M6 6l12 12"
+                              />
+                            </svg>
+                          </div>
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                            Login Gagal!
+                          </h3>
+                          <p className="text-gray-600">
+                            Username atau password salah. Silakan coba lagi.
+                          </p>
+                        </div>
+                      </div>
+                      <div className="mt-6 progress-bar bg-gray-200">
+                        <div className="progress-bar-fill bg-red-600 animate-timer"></div>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>

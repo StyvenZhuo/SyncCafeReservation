@@ -54,60 +54,64 @@ export default defineConfig({
   server: {
     proxy: {
       "^/weatherforecast": {
-        target: "https://localhost:7097",
+        target: "https://localhost:7222",
         secure: false,
       },
       "^/api/Register/register": {
-        target: "https://localhost:7102",
+        target: "https://localhost:7222",
         secure: false,
       },
       "^/api/Login/authenticate": {
-        target: "https://localhost:7102",
+        target: "https://localhost:7222",
         secure: false,
       },
       "^/reservations": {
-        target: "https://localhost:7102",
+        target: "https://localhost:7222",
         secure: false,
       },
       "^/api/Login/test": {
-        target: "https://localhost:7102",
+        target: "https://localhost:7222",
         secure: false,
       },
       "^/api/Login/logout": {
-        target: "https://localhost:7102",
+        target: "https://localhost:7222",
         secure: false,
       },
       "^/api/Cafe": {
-        target: "https://localhost:7102",
+        target: "https://localhost:7222",
         secure: false,
       },
       "^/api/Cafe/Create-Cafe": {
-        target: "https://localhost:7102",
+        target: "https://localhost:7222",
         secure: false,
       },
-      "^/api/Cafe/{id}": {
-        target: "https://localhost:7102",
+      "^/api/Cafe/Update-Cafe/{id}": {
+        target: "https://localhost:7222",
         secure: false,
       },
-      "^/api/Cafe/{id}": {
-        target: "https://localhost:7102",
+      "^/api/Cafe/Delete-Cafe/{id}": {
+        target: "https://localhost:7222",
         secure: false,
       },
       //Reservation
       "^/api/Reservations/Reservation": {
-        target: "https://localhost:7102",
+        target: "https://localhost:7222",
         secure: false,
       },
       "^/api/Reservations": {
-        target: "https://localhost:7102",
+        target: "https://localhost:7222",
         secure: false,
       },
-      "^/api/Reservations/{id}": {
-        target: "https://localhost:7102",
+      "^/api/Reservations/Update-Reservation/{id}": {
+        target: "https://localhost:7222",
         secure: false,
       },
-      "^/api/Reservations/{id}": {
-        target: "https://localhost:7102",
+      "^/api/Reservations/Delete-Reservation/{id}": {
+        target: "https://localhost:7222",
+        secure: false,
+      },
+      "^/api/Reservations/UserId": {
+        target: "https://localhost:7222",
         secure: false,
       },
     },

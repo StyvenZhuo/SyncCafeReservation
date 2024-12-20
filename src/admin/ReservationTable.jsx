@@ -12,7 +12,7 @@ function ReservationTable() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
-  const API_BASE_URL = "https://localhost:7102/api/Reservations";
+  const API_BASE_URL = "https://localhost:7102/api/reservations";
 
   useEffect(() => {
     fetchReservations();
@@ -48,13 +48,16 @@ function ReservationTable() {
 
   const handleConfirmSave = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/${editing}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ id: editing, ...currentEdit[editing] }),
-      });
+      const response = await fetch(
+        `${API_BASE_URL}/api/Reservations/Update-Reservation/${editing}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ id: editing, ...currentEdit[editing] }),
+        }
+      );
       if (!response.ok) throw new Error("Failed to update");
 
       setEditing(null);
@@ -66,17 +69,40 @@ function ReservationTable() {
     }
   };
 
-  const handleDelete = async (id) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/${id}`, {
-        method: "DELETE",
-      });
-      if (!response.ok) throw new Error("Failed to delete");
-      fetchReservations();
-    } catch (error) {
-      console.error("Error deleting reservation:", error);
-    }
+  const handleDelete = (id) => {
+    fetch(`/api/Reservations/Delete-Reservation/${id}`, {
+      method: "DELETE",
+    })
+      .then(() =>
+        setReservations((prev) =>
+          prev.filter((reservations) => reservations.id !== id)
+        )
+      )
+      .catch((error) => console.error("Error deleting reservations:", error));
   };
+
+  // const handleDelete = async (id) => {
+  //   try {
+  //     const response = await fetch(
+  //       `/api/Reservations/Delete-Reservation/${id}`,
+  //       {
+  //         method: "DELETE",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //       }
+  //     );
+
+  //     if (!response.ok) {
+  //       throw new Error(`Failed to delete reservation with ID ${id}`);
+  //     }
+
+  //     // Refresh the reservations list
+  //     fetchReservations();
+  //   } catch (error) {
+  //     console.error("Error deleting reservation:", error);
+  //   }
+  // };
 
   const totalPages = Math.ceil(reservations.length / itemsPerPage);
   const paginatedData = reservations.slice(

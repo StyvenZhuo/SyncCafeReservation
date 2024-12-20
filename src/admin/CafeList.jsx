@@ -12,7 +12,7 @@ function CafeList() {
   const itemsPerPage = 10;
 
   useEffect(() => {
-    fetch("https://localhost:7102/api/Cafe")
+    fetch("https://localhost:7222/api/Cafe")
       .then((response) => response.json())
       .then((data) => setCafes(data))
       .catch((error) => console.error("Error fetching data:", error));
@@ -29,7 +29,7 @@ function CafeList() {
       closeHour: "20:00",
     };
 
-    fetch("https://localhost:7102/api/Cafe/Create-Cafe", {
+    fetch("/api/Cafe/Create-Cafe", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -55,7 +55,7 @@ function CafeList() {
   const handleConfirmSave = () => {
     const updatedCafe = { ...currentEdit[editing] };
 
-    fetch(`https://localhost:7102/api/Cafe/${editing}`, {
+    fetch(`/api/Cafe/Update-Cafe/${editing}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -75,7 +75,7 @@ function CafeList() {
   };
 
   const handleDelete = (id) => {
-    fetch(`https://localhost:7102/api/Cafe/${id}`, {
+    fetch(`/api/Cafe/Delete-Cafe/${id}`, {
       method: "DELETE",
     })
       .then(() => setCafes((prev) => prev.filter((cafe) => cafe.id !== id)))
